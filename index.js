@@ -148,7 +148,7 @@ app.post('/api/v1/registerStrava', function (req, res) {
     res.status(200).send('OK');
 });
 
-app.get('/stravaCallback', (req, res) => {
+app.get('/stravaReply', (req, res) => {
     res.status(200).send('OK');
 });
 
