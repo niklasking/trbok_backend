@@ -148,10 +148,6 @@ app.post('/api/v1/registerStrava', function (req, res) {
     res.status(200).send('OK');
 });
 
-app.get('/api/v1/nisse', (req, res) => {
-    res.status(200).send('OK');
-});
-
 app.post('/api/v1/login',  function(req, res) {
 //    res.send(loggedInUser);
     if(!req.body.username){ 
@@ -268,6 +264,25 @@ app.get('/api/v1/users/updateNiklas', (req, res) => {
     })()
 });
 app.get('/api/v1/users', (req, res) => {
+    const getUsers = async () => {
+        try {
+            const result = await User.find({}).lean();
+            return result;
+        } catch(error) {
+            console.log(error);
+            return null;
+        }
+    }
+    (async () => {
+        let users = await getUsers();
+        if (users === null) {
+            res.send('Något gick snett');
+        } else {
+            res.send('Hittade ' + users.length + ' användare');
+        }
+    })()
+});
+app.get('/api/v1/usersStrava', (req, res) => {
     const getUsers = async () => {
         try {
             const result = await User.find({}).lean();
