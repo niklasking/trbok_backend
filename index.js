@@ -133,6 +133,9 @@ app.get('/stravaCallback', async (req, res) => {
                 accessToken: req.body.access_token,
                 stravaId: req.body.athlete.id
             }
+            console.log(response);
+            console.log(userDetails);
+            console.log(userId);
             User.findByIdAndUpdate(userId, userDetails, { upsert: true });
         } catch(err) {
             console.log('Strava exchange error: ' + err);
@@ -268,25 +271,6 @@ app.get('/api/v1/users/updateNiklas', (req, res) => {
     })()
 });
 app.get('/api/v1/users', (req, res) => {
-    const getUsers = async () => {
-        try {
-            const result = await User.find({}).lean();
-            return result;
-        } catch(error) {
-            console.log(error);
-            return null;
-        }
-    }
-    (async () => {
-        let users = await getUsers();
-        if (users === null) {
-            res.send('Något gick snett');
-        } else {
-            res.send('Hittade ' + users.length + ' användare');
-        }
-    })()
-});
-app.get('/api/v1/usersstrava', (req, res) => {
     const getUsers = async () => {
         try {
             const result = await User.find({}).lean();
