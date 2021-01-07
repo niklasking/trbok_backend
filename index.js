@@ -110,6 +110,7 @@ getStravaActivities = async (accessToken) => {
         return [];
     }
 }
+
 app.get('/stravaCallback', async (req, res) => {
     if (req.query.error !== undefined) {
         console.log('Strava error: ' + req.query.error);
@@ -134,7 +135,7 @@ app.get('/stravaCallback', async (req, res) => {
         }
     }
     res.status(200).send('OK');
-})
+});
 app.post('/api/v1/registerStrava', function (req, res) {
     axios.get('https://www.strava.com/oauth/authorize', {
         client_id: secret.clientID,
