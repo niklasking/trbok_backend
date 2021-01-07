@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const moment = require('moment');
 const axios = require('axios');
@@ -33,11 +34,11 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   // we're connected!
 });
-
+/*
 app.use(function (req, res, next) {
 //  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-//    res.setHeader('Access-Control-Allow-Origin', 'http://trbok.niklasking.com:3000');
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', 'http://trbok.niklasking.com:3000');
+//    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 //    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.setHeader('"Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"');
@@ -45,6 +46,9 @@ app.use(function (req, res, next) {
 
     next();
 });
+*/
+app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(expressSession);
