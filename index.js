@@ -282,7 +282,7 @@ app.get('/api/v1/users', (req, res) => {
         }
     })()
 });
-app.get('/api/v1/usersStrava', (req, res) => {
+app.get('/api/v1/usersstrava', (req, res) => {
     const getUsers = async () => {
         try {
             const result = await User.find({}).lean();
