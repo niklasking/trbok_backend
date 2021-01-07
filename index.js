@@ -35,8 +35,8 @@ db.once('open', function() {
 });
 
 app.use(function (req, res, next) {
-
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+//  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Origin', 'http://trdagbok.niklasking.com:3000');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -60,9 +60,6 @@ passport.use(new LocalStrategy(User.authenticate()));
     
 
 authorize = async (stravaUserId) => {
-//    const clientID = "59119";
-//    const clientSecret = "683dde428eff95f3c3e5c34cbfc554f3a3683fb5";
-
     try {
         const user = await User.find({ stravaId: stravaUserId });
         if (user === null) {
@@ -95,7 +92,6 @@ authorize = async (stravaUserId) => {
         console.log(err);
         return null;
     }
-//    const refreshToken = "f0e97136017441ba34d9f80fdc23e8a9026e9b21"; // Niklas Bratt
 
 }
 
@@ -112,6 +108,42 @@ getStravaActivities = async (accessToken) => {
         return [];
     }
 }
+app.get('/stravaCallback', async (req, res) => {
+    if (req.query.error !== undefined) {
+        console.log('Strava error: ' + req.query.error);
+    } else {
+        try {
+            const userId = req.query.state;
+            const response = await axios.post('https://www.strava.com/oauth/token', {
+                client_id: secret.clientID,
+                client_secret: secret.clientSecret,
+                code: req.query.code,
+                grant_type: 'authorization_code'
+            });
+            const userDetails = {
+                expiresAt: req.body.expires_at,
+                refreshToken: req.body.refresh_token,
+                accessToken: req.body.access_token,
+                stravaId: req.body.athlete.id
+            }
+            User.findByIdAndUpdate(userId, userDetails, { upsert: true });
+        } catch(err) {
+            console.log('Strava exchange error: ' + err);
+        }
+    }
+    res.status(200).send('OK');
+})
+app.post('/api/v1/registerStrava', function (req, res) {
+    axios.get('https://www.strava.com/oauth/authorize', {
+        client_id: secret.clientID,
+        redirect_uri: 'http://trbok_backend.niklasking.com:3333/stravaCallback',
+        response_type: 'code',
+        approval_prompt: 'auto',
+        scope: 'activity:read_all',
+        state: req.body.userId
+    });
+    res.status(200).send('OK');
+});
 app.post('/api/v1/login',  function(req, res) {
 //    res.send(loggedInUser);
     if(!req.body.username){ 
