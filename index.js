@@ -116,7 +116,6 @@ getStravaActivities = async (accessToken) => {
 }
 
 app.get('/stravaCallback', async (req, res) => {
-    console.log(req.query);
     if (req.query.error !== undefined) {
         console.log('Strava error: ' + req.query.error);
     } else {
@@ -129,14 +128,11 @@ app.get('/stravaCallback', async (req, res) => {
                 grant_type: 'authorization_code'
             });
             const userDetails = {
-                expiresAt: req.body.expires_at,
-                refreshToken: req.body.refresh_token,
-                accessToken: req.body.access_token,
-                stravaId: req.body.athlete.id
+                expiresAt: response.data.expires_at,
+                refreshToken: response.data.refresh_token,
+                accessToken: response.data.access_token,
+                stravaId: response.data.athlete.id
             }
-            console.log(response);
-            console.log(userDetails);
-            console.log(userId);
             User.findByIdAndUpdate(userId, userDetails, { upsert: true });
         } catch(err) {
             console.log('Strava exchange error: ' + err);
