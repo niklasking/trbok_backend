@@ -134,11 +134,9 @@ app.get('/stravaCallback', async (req, res) => {
                 accessToken: response.data.access_token,
                 stravaId: response.data.athlete.id
             }
-            console.log(response.data);
-            console.log(userId);
-            console.log(userDetails);
             await User.findByIdAndUpdate(userId, userDetails, { upsert: true });
-            res.status(200).send('OK');
+
+            res.redirect('/api/v1/strava/activities?stravaId=' + userDetails.stravaId);
         } catch(err) {
             console.log('Strava exchange error: ' + err);
             res.status(500).send('Strava exchange error: ' + err);
