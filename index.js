@@ -405,7 +405,8 @@ app.get('/api/v1/strava/activities', (req, res) => {
                 res.status(400).json({ success: false, message: err.message });
             }        
         })
-        res.send(result);
+        // ******** UPPDATERA MED HTTPS **********
+        res.redirect('http://trbok.niklasking.com');
     })
     .catch( err => res.send([]));
 
