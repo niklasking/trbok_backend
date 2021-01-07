@@ -19,7 +19,6 @@ const expressSession = require('express-session')({
 const app = express();
 const port = 3333;
 
-//const stravaId = "16477224"; // Niklas Bratt
 let loggedInUser = null; 
 let userData = null;
 
@@ -104,6 +103,19 @@ authorize = async (stravaUserId) => {
 getStravaActivities = async (accessToken) => {
     try {
         const response = await axios.get('https://www.strava.com/api/v3/athlete/activities?per_page=200', {
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            }
+        });
+        return response.data;
+    } catch(err) {
+        console.log(err);
+        return [];
+    }
+}
+getStravaActivity = async (accessToken, activityId) => {
+    try {
+        const response = await axios.get('https://www.strava.com/api/v3/athlete/activities/' + activityId, {
             headers: {
                 Authorization: 'Bearer ' + accessToken
             }
@@ -413,10 +425,64 @@ app.get('/api/v1/strava/activities', (req, res) => {
 });
 
 // Creates the endpoint for our webhook
-app.post('/stravaWebhook', (req, res) => {
+app.post('/stravaWebhook', async (req, res) => {
     console.log("webhook event received!", req.query, req.body);
-    res.status(200).send('EVENT_RECEIVED');
+    if (req.body.object_type === 'activity' && req.body.aspect_type === 'create') {
+        try {
+            const activityId = req.body.object_id;
+            const accessToken = await authorize(req.query.stravaId);
+            const result = await getStravaActivity(accessToken, activityId);
+            if (result.length > 0) {
+                const item = result[0];
+
+                const startTime = moment(item.start_date).format('HH:mm');
+                const lsd = item.moving_time > 5400 ? 1 : 0;
+                const strength = item.type === 'WeightTraining' ? 1 : 0;
+                const alternative = item.type === 'Swim' || item.type === 'Ride' || item.type === 'VirtualRide' || item.type === 'Walk' || item.type === 'Workout' ? 1 : 0;
+                const activity = new Activity(
+                    {
+                        name: startTime + ' ' + item.name,
+                        distance: item.distance,
+                        movingTime: item.moving_time,
+                        totalElevationGain: item.total_elevation_gain,
+                        type: item.type,
+                        stravaId: item.id,
+                        startDate: new Date(item.start_date),
+                        startLat: item.start_latitude,
+                        startLong: item.start_longitude,
+                        mapPolyline: item.map.summary_polyline,
+                        averageSpeed: item.average_speed,
+                        maxSpeed: item.max_speed,
+                        averageCadence: item.average_cadence,
+                        maxCadence: item.max_cadense,
+                        averageHeartrate: item.average_heartrate,
+                        maxHeartRate: item.max_heartrate,
+                        elevationHighest: item.elev_high,
+                        elevationLowest: item.elev_low,
+                        user: userData._id,
+                        title: startTime,
+                        ol: 0,
+                        night: 0, // Natt-OL
+                        quality: 0,
+                        lsd: lsd, // Långpass,
+                        strength: strength,
+                        alternative: alternative,
+                        forest: 0,
+                        path: 0
+                    }
+                );
+                await activity.save();
+            }
+            res.status(200).send('EVENT_RECEIVED');
+        } catch(err) {
+            console.log("Det gick inte att skapa en aktivitet: " + err);
+            res.status(200).send('EVENT_RECEIVED');
+        }
+    }
 });
+
+
+
 // Adds support for GET requests to our webhook
 app.get('/stravaWebhook', (req, res) => {
     // Your verify token. Should be a random string.
