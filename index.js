@@ -116,6 +116,7 @@ getStravaActivities = async (accessToken) => {
 }
 
 app.get('/stravaCallback', async (req, res) => {
+    console.log(req.query);
     if (req.query.error !== undefined) {
         console.log('Strava error: ' + req.query.error);
     } else {
