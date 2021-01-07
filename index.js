@@ -148,7 +148,7 @@ app.post('/api/v1/registerStrava', function (req, res) {
     res.status(200).send('OK');
 });
 
-app.get('/api/v1/stravaReply', (req, res) => {
+app.get('/api/v1/nisse', (req, res) => {
     res.status(200).send('OK');
 });
 
