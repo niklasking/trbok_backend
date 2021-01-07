@@ -147,6 +147,11 @@ app.post('/api/v1/registerStrava', function (req, res) {
     });
     res.status(200).send('OK');
 });
+
+app.get('/stravaCallback', (req, res) => {
+    res.status(200).send('OK');
+});
+
 app.post('/api/v1/login',  function(req, res) {
 //    res.send(loggedInUser);
     if(!req.body.username){ 
