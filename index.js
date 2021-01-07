@@ -137,7 +137,7 @@ app.get('/stravaCallback', async (req, res) => {
             console.log(response.data);
             console.log(userId);
             console.log(userDetails);
-            User.findByIdAndUpdate(userId, userDetails, { upsert: true });
+            await User.findByIdAndUpdate(userId, userDetails, { upsert: true });
             res.status(200).send('OK');
         } catch(err) {
             console.log('Strava exchange error: ' + err);
