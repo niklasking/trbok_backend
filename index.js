@@ -406,7 +406,7 @@ app.get('/api/v1/strava/activities', (req, res) => {
             }        
         })
         // ******** UPPDATERA MED HTTPS **********
-        res.redirect('http://trbok.niklasking.com');
+        res.redirect('http://trbok.niklasking.com:3000');
     })
     .catch( err => res.send([]));
 
