@@ -158,7 +158,7 @@ app.get('/stravaCallback', async (req, res) => {
 app.post('/api/v1/registerStrava', function (req, res) {
     axios.get('https://www.strava.com/oauth/authorize', {
         client_id: secret.clientID,
-        redirect_uri: 'http://trbok_backend.niklasking.com:3333/stravaCallback',
+        redirect_uri: 'https://trbokbackend.niklasking.com/stravaCallback',
         response_type: 'code',
         approval_prompt: 'auto',
         scope: 'activity:read_all',
