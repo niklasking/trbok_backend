@@ -1,0 +1,22 @@
+{
+  "name": "trbok_backend",
+  "version": "0.0.1",
+  "description": "OK Orions träningsdagbok, backend.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Niklas King",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "connect-ensure-login": "^0.1.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "moment": "^2.29.1",
+    "mongoose": "^5.11.9",
+    "nodemon": "^2.0.6",
+    "passport": "^0.4.1",
+    "passport-local-mongoose": "^6.0.1"
+  }
+}
