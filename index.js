@@ -431,7 +431,7 @@ app.post('/stravaWebhook', async (req, res) => {
     if (req.body.object_type === 'activity' && req.body.aspect_type === 'create') {
         try {
             const activityId = req.body.object_id;
-            const accessToken = await authorize(req.query.owner_id);
+            const accessToken = await authorize(req.body.owner_id);
             console.log('**Authorized: ' + accessToken);
             const result = await getStravaActivity(accessToken, activityId);
             console.log('Result: ' + result);
