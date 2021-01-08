@@ -434,10 +434,12 @@ app.post('/stravaWebhook', async (req, res) => {
             const accessToken = await authorize(req.body.owner_id);
             console.log('**Authorized: ' + accessToken);
             const result = await getStravaActivity(accessToken, activityId);
-            console.log('Result: ' + result.data);
-            if (result.length > 0) {
-                const item = result[0];
-                console.log("Found activity: ' + item");
+            console.log('Result: ' + result[0]);
+            console.log('Result length: ' + result.length);
+            if (result.length >= 0) {
+                //const item = result[0];
+                const item = result;
+                console.log("Found activity: " + item);
 
                 const startTime = moment(item.start_date).format('HH:mm');
                 const lsd = item.moving_time > 5400 ? 1 : 0;
