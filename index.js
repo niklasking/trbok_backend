@@ -114,7 +114,7 @@ getStravaActivities = async (accessToken) => {
         return [];
     }
 };
-getAdditionalStravaActivities = async (accessToken, before) => {
+getAdditionalBeforeStravaActivities = async (accessToken, before) => {
     try {
         const response = await axios.get('https://www.strava.com/api/v3/athlete/activities?per_page=200&before=' + before, {
             headers: {
@@ -126,7 +126,20 @@ getAdditionalStravaActivities = async (accessToken, before) => {
         console.log(err);
         return [];
     }
-}
+};
+getAdditionalBetweenStravaActivities = async (accessToken, before, after) => {
+    try {
+        const response = await axios.get('https://www.strava.com/api/v3/athlete/activities?per_page=200&before=' + before + '&after=' + after, {
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            }
+        });
+        return response.data;
+    } catch(err) {
+        console.log(err);
+        return [];
+    }
+};
 
 getStravaActivity = async (accessToken, activityId) => {
     try {
@@ -360,10 +373,66 @@ app.get('/api/v1/strava/activities', (req, res) => {
     .catch( err => res.send([]));
 
 });
-app.get('/api/v1/strava/activities/additional', (req, res) => {
+app.get('/api/v1/strava/activities/before', (req, res) => {
     const before = req.query.before;
     authorize(req.query.stravaId)
-    .then( accessToken => getAdditionalStravaActivities(accessToken, before))
+    .then( accessToken => getAdditionalBeforeStravaActivities(accessToken, before))
+    .then( result => {
+        result.map( item => {
+            try {
+                const startTime = moment(item.start_date).format('HH:mm');
+                const lsd = item.moving_time > 5400 ? 1 : 0;
+                const strength = item.type === 'WeightTraining' ? 1 : 0;
+                const alternative = item.type === 'Swim' || item.type === 'Ride' || item.type === 'VirtualRide' || item.type === 'Walk' || item.type === 'Workout' ? 1 : 0;
+                const activity = new Activity(
+                    {
+                        name: startTime + ' ' + item.name,
+                        distance: item.distance,
+                        movingTime: item.moving_time,
+                        totalElevationGain: item.total_elevation_gain,
+                        type: item.type,
+                        stravaId: item.id,
+                        startDate: new Date(item.start_date),
+                        startLat: item.start_latitude,
+                        startLong: item.start_longitude,
+                        mapPolyline: item.map.summary_polyline,
+                        averageSpeed: item.average_speed,
+                        maxSpeed: item.max_speed,
+                        averageCadence: item.average_cadence,
+                        maxCadence: item.max_cadense,
+                        averageHeartrate: item.average_heartrate,
+                        maxHeartRate: item.max_heartrate,
+                        elevationHighest: item.elev_high,
+                        elevationLowest: item.elev_low,
+                        user: userData._id,
+                        title: startTime,
+                        ol: 0,
+                        night: 0, // Natt-OL
+                        quality: 0,
+                        lsd: lsd, // Långpass,
+                        strength: strength,
+                        alternative: alternative,
+                        forest: 0,
+                        path: 0
+                    }
+                );
+                activity.save();
+            } catch(err) {
+                console.log(err);
+                res.status(400).json({ success: false, message: err.message });
+            }        
+        })
+        // ******** UPPDATERA MED HTTPS **********
+        res.redirect('https://trbok.niklasking.com');
+    })
+    .catch( err => res.send([]));
+
+});
+app.get('/api/v1/strava/activities/between', (req, res) => {
+    const before = req.query.before;
+    const after = req.query.after;
+    authorize(req.query.stravaId)
+    .then( accessToken => getAdditionalBetweenStravaActivities(accessToken, before, after))
     .then( result => {
         result.map( item => {
             try {
