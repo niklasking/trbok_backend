@@ -320,7 +320,8 @@ app.patch('/api/v1/activities', async (req, res) => {
     }
 });
 app.get('/api/v1/strava/activities', (req, res) => {
-    authorize(req.query.stravaId)
+    const userStravaId = req.query.stravaId;
+    authorize(userStravaId)
     .then( accessToken => getStravaActivities(accessToken))
     .then( result => {
         result.map( item => {
@@ -350,6 +351,7 @@ app.get('/api/v1/strava/activities', (req, res) => {
                         elevationHighest: item.elev_high,
                         elevationLowest: item.elev_low,
                         user: userData._id,
+                        userStravaId: userStravaId,
                         title: startTime,
                         ol: 0,
                         night: 0, // Natt-OL
@@ -375,7 +377,8 @@ app.get('/api/v1/strava/activities', (req, res) => {
 });
 app.get('/api/v1/strava/activities/before', (req, res) => {
     const before = req.query.before;
-    authorize(req.query.stravaId)
+    const userStravaId = req.query.stravaId;
+    authorize(userStravaId)
     .then( accessToken => getAdditionalBeforeStravaActivities(accessToken, before))
     .then( result => {
         result.map( item => {
@@ -405,6 +408,7 @@ app.get('/api/v1/strava/activities/before', (req, res) => {
                         elevationHighest: item.elev_high,
                         elevationLowest: item.elev_low,
                         user: userData._id,
+                        userStravaId: userStravaId,
                         title: startTime,
                         ol: 0,
                         night: 0, // Natt-OL
@@ -431,7 +435,8 @@ app.get('/api/v1/strava/activities/before', (req, res) => {
 app.get('/api/v1/strava/activities/between', (req, res) => {
     const before = req.query.before;
     const after = req.query.after;
-    authorize(req.query.stravaId)
+    const userStravaId = req.query.stravaId;
+    authorize(ruserStravaId)
     .then( accessToken => getAdditionalBetweenStravaActivities(accessToken, before, after))
     .then( result => {
         result.map( item => {
@@ -461,6 +466,7 @@ app.get('/api/v1/strava/activities/between', (req, res) => {
                         elevationHighest: item.elev_high,
                         elevationLowest: item.elev_low,
                         user: userData._id,
+                        userStravaId: userStravaId,
                         title: startTime,
                         ol: 0,
                         night: 0, // Natt-OL

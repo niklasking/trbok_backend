@@ -34,7 +34,8 @@ const ActivitySchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'User',
             required: true
-        }
+        },
+        userStravaId: String
     },
     { collection: 'activity' }
 );
