@@ -72,13 +72,11 @@ authorize = async (stravaUserId) => {
         } else if (user.length === 0) {
             return null;
         }
-        console.log('** Found user: ' + user);
-//        const reffe = 'f0e97136017441ba34d9f80fdc23e8a9026e9b21';
+//        console.log('** Found user: ' + user);
         const response = await axios.post('https://www.strava.com/api/v3/oauth/token', {
             client_id: secret.clientID,
             client_secret: secret.clientSecret,
             refresh_token: user[0].refreshToken,
-//            refresh_token: reffe,
             grant_type: 'refresh_token'
         });
         user[0].refreshToken = response.data.refresh_token;
@@ -92,7 +90,6 @@ authorize = async (stravaUserId) => {
         }
         userData = foundUserData;
         return userData.accessToken;
-//        return (response.data.access_token);
     } catch(err) {
         console.log(err);
         return null;
@@ -430,7 +427,7 @@ app.post('/stravaWebhook', async (req, res) => {
     if (req.body.object_type === 'activity' && req.body.aspect_type === 'create') {
         try {
             const activityId = req.body.object_id;
-            const accessToken = await authorize(req.query.stravaId);
+            const accessToken = await authorize(req.query.owner_id);
             const result = await getStravaActivity(accessToken, activityId);
             if (result.length > 0) {
                 const item = result[0];
