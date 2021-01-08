@@ -65,7 +65,7 @@ passport.use(new LocalStrategy(User.authenticate()));
     
 
 authorize = async (stravaUserId) => {
-    console.log('Authorize: ' + stravaUserId);
+//    console.log('Authorize: ' + stravaUserId);
     try {
         const user = await User.find({ stravaId: stravaUserId });
         if (user === null) {
@@ -73,16 +73,16 @@ authorize = async (stravaUserId) => {
         } else if (user.length === 0) {
             return null;
         }
-        console.log('** Found user: ' + user);
+//        console.log('** Found user: ' + user);
         const response = await axios.post('https://www.strava.com/api/v3/oauth/token', {
             client_id: secret.clientID,
             client_secret: secret.clientSecret,
             refresh_token: user[0].refreshToken,
             grant_type: 'refresh_token'
         });
-        console.log('Refresh: ' + response.data.refresh_token);
-        console.log('Access: ' + response.data.access_token);
-        console.log('Expires: ' + response.data.expires_at);
+//        console.log('Refresh: ' + response.data.refresh_token);
+//        console.log('Access: ' + response.data.access_token);
+//        console.log('Expires: ' + response.data.expires_at);
         user[0].refreshToken = response.data.refresh_token;
         user[0].accessToken = response.data.access_token;
         user[0].expiresAt = response.data.expires_at;
@@ -113,7 +113,21 @@ getStravaActivities = async (accessToken) => {
         console.log(err);
         return [];
     }
+};
+getAdditionalStravaActivities = async (accessToken, before) => {
+    try {
+        const response = await axios.get('https://www.strava.com/api/v3/athlete/activities?per_page=200&before=' + before, {
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            }
+        });
+        return response.data;
+    } catch(err) {
+        console.log(err);
+        return [];
+    }
 }
+
 getStravaActivity = async (accessToken, activityId) => {
     try {
         const response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId, {
@@ -126,7 +140,7 @@ getStravaActivity = async (accessToken, activityId) => {
         console.log(err);
         return [];
     }
-}
+};
 
 app.get('/stravaCallback', async (req, res) => {
     if (req.query.error !== undefined) {
@@ -223,84 +237,6 @@ app.post('/api/v1/register', function(req, res) {
         res.json({success: true, message: "Your account has been saved", user: user}) 
     } 
     }); 
-})
-app.get('/api/v1/users/add', async (req, res) => {
-    const niklas = new User(
-        {
-            stravaId: null,
-            name: "Niklas Bratt",
-            refreshToken: null,
-            accessToken: null,
-            expiresAt: null,
-            private: false
-        }
-    )
-    try {
-        await niklas.save();
-        res.status(200).json({ success: true, data: niklas });
-    } catch(err) {
-        console.log(err);
-        res.status(400).json({ success: false, message: err.message });
-    }
-});
-app.get('/api/v1/users/updateNiklas', (req, res) => {
-    const getUserByName = async (name) => {
-        try {
-            const user = await User.find({ name: name });
-            return user;
-        } catch(error) {
-            console.log(error);
-            return null;
-        }
-    }
-    const updateUser = async (user) => {
-        user.stravaId = '16477224';
-        user.refreshToken = 'f0e97136017441ba34d9f80fdc23e8a9026e9b21';
-        user.accessToken = 'f6bdd726d1e138a002a7e132b3966ccc326f150d';
-        user.expiresAt = 1609619930;
-
-        try {
-            const updatedUser = await user.save();
-            return updatedUser;
-        } catch(error) {
-            console.log(error);
-            return null;
-        }
-    }
-    (async () => {
-        const foundUser = await getUserByName('Niklas Bratt');
-        if (foundUser === null) {
-            res.send('Hittade inte nån användare för det blev knas');
-        } else if (foundUser.length === 0) {
-            res.send('Hittade inte nån användare');
-        }
-        let result = await updateUser(foundUser[0]);
-        if (result === null) {
-            res.send('Det gick inte att uppdatera');
-        } else {
-            res.send('Användaren är uppdaterad');
-        }
-
-    })()
-});
-app.get('/api/v1/users', (req, res) => {
-    const getUsers = async () => {
-        try {
-            const result = await User.find({}).lean();
-            return result;
-        } catch(error) {
-            console.log(error);
-            return null;
-        }
-    }
-    (async () => {
-        let users = await getUsers();
-        if (users === null) {
-            res.send('Något gick snett');
-        } else {
-            res.send('Hittade ' + users.length + ' användare');
-        }
-    })()
 });
 app.get('/api/v1/activities', async (req, res) => {
     try {
@@ -424,6 +360,61 @@ app.get('/api/v1/strava/activities', (req, res) => {
     .catch( err => res.send([]));
 
 });
+app.get('/api/v1/strava/activities/additional', (req, res) => {
+    const before = req.query.before;
+    authorize(req.query.stravaId)
+    .then( accessToken => getAdditionalStravaActivities(accessToken, before))
+    .then( result => {
+        result.map( item => {
+            try {
+                const startTime = moment(item.start_date).format('HH:mm');
+                const lsd = item.moving_time > 5400 ? 1 : 0;
+                const strength = item.type === 'WeightTraining' ? 1 : 0;
+                const alternative = item.type === 'Swim' || item.type === 'Ride' || item.type === 'VirtualRide' || item.type === 'Walk' || item.type === 'Workout' ? 1 : 0;
+                const activity = new Activity(
+                    {
+                        name: startTime + ' ' + item.name,
+                        distance: item.distance,
+                        movingTime: item.moving_time,
+                        totalElevationGain: item.total_elevation_gain,
+                        type: item.type,
+                        stravaId: item.id,
+                        startDate: new Date(item.start_date),
+                        startLat: item.start_latitude,
+                        startLong: item.start_longitude,
+                        mapPolyline: item.map.summary_polyline,
+                        averageSpeed: item.average_speed,
+                        maxSpeed: item.max_speed,
+                        averageCadence: item.average_cadence,
+                        maxCadence: item.max_cadense,
+                        averageHeartrate: item.average_heartrate,
+                        maxHeartRate: item.max_heartrate,
+                        elevationHighest: item.elev_high,
+                        elevationLowest: item.elev_low,
+                        user: userData._id,
+                        title: startTime,
+                        ol: 0,
+                        night: 0, // Natt-OL
+                        quality: 0,
+                        lsd: lsd, // Långpass,
+                        strength: strength,
+                        alternative: alternative,
+                        forest: 0,
+                        path: 0
+                    }
+                );
+                activity.save();
+            } catch(err) {
+                console.log(err);
+                res.status(400).json({ success: false, message: err.message });
+            }        
+        })
+        // ******** UPPDATERA MED HTTPS **********
+        res.redirect('https://trbok.niklasking.com');
+    })
+    .catch( err => res.send([]));
+
+});
 
 // Creates the endpoint for our webhook
 app.post('/stravaWebhook', async (req, res) => {
@@ -432,13 +423,13 @@ app.post('/stravaWebhook', async (req, res) => {
         try {
             const activityId = req.body.object_id;
             const accessToken = await authorize(req.body.owner_id);
-            console.log('**Authorized: ' + accessToken);
+//            console.log('**Authorized: ' + accessToken);
             const result = await getStravaActivity(accessToken, activityId);
-            console.log('Result: ' + result);
+//            console.log('Result: ' + result);
             if (result !== null) {
                 //const item = result[0];
                 const item = result;
-                console.log("Found activity: " + item);
+//                console.log("Found activity: " + item);
 
                 const startTime = moment(item.start_date).format('HH:mm');
                 const lsd = item.moving_time > 5400 ? 1 : 0;
@@ -476,6 +467,7 @@ app.post('/stravaWebhook', async (req, res) => {
                         path: 0
                     }
                 );
+//                console.log('Denna ska sparas: ' + activityId); 
                 await activity.save();
             }
             res.status(200).send('EVENT_RECEIVED');
