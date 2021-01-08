@@ -434,9 +434,8 @@ app.post('/stravaWebhook', async (req, res) => {
             const accessToken = await authorize(req.body.owner_id);
             console.log('**Authorized: ' + accessToken);
             const result = await getStravaActivity(accessToken, activityId);
-            console.log('Result: ' + result[0]);
-            console.log('Result length: ' + result.length);
-            if (result.length >= 0) {
+            console.log('Result: ' + result);
+            if (result !== null) {
                 //const item = result[0];
                 const item = result;
                 console.log("Found activity: " + item);
