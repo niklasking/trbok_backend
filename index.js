@@ -266,6 +266,10 @@ app.get('/api/v1/activities', async (req, res) => {
 });
 app.post('/api/v1/activities', async (req, res) => {
     try {
+        console.log('************');
+        console.log(req.body.startDate);
+        console.log(new Date(req.body.startDate));
+        console.log('************');
         const activity = new Activity(
             {
                 startDate: new Date(req.body.startDate),
