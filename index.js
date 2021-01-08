@@ -294,7 +294,6 @@ app.post('/api/v1/activities', async (req, res) => {
 app.patch('/api/v1/activities', async (req, res) => {
     try {
         const activity = {
-            startDate: new Date(req.body.start_date),
             name: req.body.name,
             distance: req.body.distance,
             type: req.body.type,
