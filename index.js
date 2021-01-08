@@ -329,7 +329,7 @@ app.get('/api/v1/strava/activities', (req, res) => {
                 const startTime = moment(item.start_date).format('HH:mm');
                 const lsd = item.moving_time > 5400 ? 1 : 0;
                 const strength = item.type === 'WeightTraining' ? 1 : 0;
-                const alternative = item.type === 'Swim' || item.type === 'Ride' || item.type === 'VirtualRide' || item.type === 'Walk' || item.type === 'Workout' ? 1 : 0;
+                const alternative = item.type === 'Swim' || item.type === 'Ride' || item.type === 'VirtualRide' || item.type === 'Walk' || item.type === 'Workout' || item.type === 'Kayaking' || item.type === 'Rowing' || item.type === 'NordicSki' ? 1 : 0;
                 const activity = new Activity(
                     {
                         name: startTime + ' ' + item.name,
