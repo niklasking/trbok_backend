@@ -215,7 +215,7 @@ app.post('/api/v1/login',  function(req, res) {
                             console.log('error: ' + err);
                             res.json({success: false, message: err}) 
                         }else{ 
-                            console.log(user);
+//                            console.log(user);
 //                            const token =  jwt.sign({userId : user._id,  
 //                            username:user.username}, secretkey,  
 //                                {expiresIn: '24h'}) 
@@ -268,24 +268,19 @@ app.post('/api/v1/activities', async (req, res) => {
     try {
         const activity = new Activity(
             {
+                startDate: new Date(req.body.startDate),
                 name: req.body.name,
                 distance: req.body.distance,
-                movingTime: req.body.time,
-//                totalElevationGain: item.total_elevation_gain,
-//                type: item.type,
-//                stravaId: item.id,
-                startDate: new Date(req.body.date),
-//                startLat: item.start_latitude,
-//                startLong: item.start_longitude,
-//                mapPolyline: item.map.summary_polyline,
-//                averageSpeed: item.average_speed,
-//                maxSpeed: item.max_speed,
-//                averageCadence: item.average_cadence,
-//                maxCadence: item.max_cadense,
-//                averageHeartrate: item.average_heartrate,
-//                maxHeartRate: item.max_heartrate,
-//                elevationHighest: item.elev_high,
-//                elevationLowest: item.elev_low,
+                type: req.body.type,
+                movingTime: req.body.movingTime,
+                ol: req.body.ol,
+                night: req.body.night,
+                quality: req.body.quality,
+                lsd: req.body.lsd,
+                strength: req.body.strength,
+                alternative: req.body.alternative,
+                forest: req.body.forest,
+                path: req.body.path,
                 user: req.body.user._id
             }
         );
@@ -299,6 +294,7 @@ app.post('/api/v1/activities', async (req, res) => {
 app.patch('/api/v1/activities', async (req, res) => {
     try {
         const activity = {
+            startDate: new Date(req.body.start_date),
             name: req.body.name,
             distance: req.body.distance,
             type: req.body.type,
