@@ -65,6 +65,7 @@ passport.use(new LocalStrategy(User.authenticate()));
     
 
 authorize = async (stravaUserId) => {
+    console.log('Authorize: ' + stravaUserId);
     try {
         const user = await User.find({ stravaId: stravaUserId });
         if (user === null) {
@@ -72,13 +73,16 @@ authorize = async (stravaUserId) => {
         } else if (user.length === 0) {
             return null;
         }
-//        console.log('** Found user: ' + user);
+        console.log('** Found user: ' + user);
         const response = await axios.post('https://www.strava.com/api/v3/oauth/token', {
             client_id: secret.clientID,
             client_secret: secret.clientSecret,
             refresh_token: user[0].refreshToken,
             grant_type: 'refresh_token'
         });
+        console.log('Refresh: ' + response.data.refresh_token);
+        console.log('Access: ' + response.data.access_token);
+        console.log('Expires: ' + response.data.expires_at);
         user[0].refreshToken = response.data.refresh_token;
         user[0].accessToken = response.data.access_token;
         user[0].expiresAt = response.data.expires_at;
@@ -112,7 +116,7 @@ getStravaActivities = async (accessToken) => {
 }
 getStravaActivity = async (accessToken, activityId) => {
     try {
-        const response = await axios.get('https://www.strava.com/api/v3/athlete/activities/' + activityId, {
+        const response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId, {
             headers: {
                 Authorization: 'Bearer ' + accessToken
             }
@@ -428,7 +432,9 @@ app.post('/stravaWebhook', async (req, res) => {
         try {
             const activityId = req.body.object_id;
             const accessToken = await authorize(req.query.owner_id);
+            console.log('**Authorized: ' + accessToken);
             const result = await getStravaActivity(accessToken, activityId);
+            console.log('Result: ' + result);
             if (result.length > 0) {
                 const item = result[0];
 
