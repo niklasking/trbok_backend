@@ -311,7 +311,16 @@ app.patch('/api/v1/activities', async (req, res) => {
         res.status(200).send(result);
     } catch(err) {
 //        console.log('Save error: ' + err);
-        res.status(400).send("Det gick inte att skapa en aktivitet. " + err);
+        res.status(400).send("Det gick inte att ändra en aktivitet. " + err);
+    }
+});
+app.delete('/api/v1/activities/:id', async (req, res) => {
+    try {
+        const result = await Activity.findByIdAndRemove(req.params.id);
+        res.status(200).send(result);
+    } catch(err) {
+//        console.log('Save error: ' + err);
+        res.status(400).send("Det gick inte att ta bort en aktivitet. " + err);
     }
 });
 app.get('/api/v1/strava/activities', (req, res) => {
