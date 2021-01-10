@@ -440,7 +440,7 @@ app.get('/api/v1/strava/activities/between', (req, res) => {
     const before = req.query.before;
     const after = req.query.after;
     const userStravaId = req.query.stravaId;
-    authorize(ruserStravaId)
+    authorize(userStravaId)
     .then( accessToken => getAdditionalBetweenStravaActivities(accessToken, before, after))
     .then( result => {
         result.map( item => {
