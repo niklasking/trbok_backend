@@ -33,10 +33,10 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   // we're connected!
 });
-/*
+
 app.use(function (req, res, next) {
 //  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.setHeader('Access-Control-Allow-Origin', 'http://trbok.niklasking.com:3000');
+    res.setHeader('Access-Control-Allow-Origin', 'https://trbok.niklasking.com');
 //    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 //    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
@@ -45,7 +45,7 @@ app.use(function (req, res, next) {
 
     next();
 });
-*/
+
 app.use(cors());
 
 app.use(express.json());
