@@ -33,7 +33,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   // we're connected!
 });
-
+/*
 app.use(function (req, res, next) {
 //  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader('Access-Control-Allow-Origin', 'https://trbok.niklasking.com');
@@ -45,7 +45,7 @@ app.use(function (req, res, next) {
 
     next();
 });
-
+*/
 app.use(cors());
 
 app.use(express.json());
