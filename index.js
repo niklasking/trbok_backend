@@ -488,10 +488,10 @@ app.get('/api/v1/strava/activities/between', (req, res) => {
                 res.status(400).json({ success: false, message: err.message });
             }        
         })
-        // ******** UPPDATERA MED HTTPS **********
-        res.redirect('https://trbok.niklasking.com');
+//        res.redirect('https://trbok.niklasking.com');
+        res.send(200).send('Ok');
     })
-    .catch( err => res.send([]));
+    .catch( err => res.status(400).send([]));
 
 });
 
