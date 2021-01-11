@@ -155,6 +155,21 @@ getStravaActivity = async (accessToken, activityId) => {
     }
 };
 
+app.get('/api/v1/summary/week', async (req, res) => {
+    try {
+//        console.log('Saving... ' + req.query.user);
+//        const dateStart = req.query.dateStart;
+//        const dateEnd = req.query.dateEnd;
+        const dateStart = new Date(req.query.dateStart);
+        const dateEnd = new Date(req.query.dateEnd);
+        const result = await Activity.aggregate([ { $match: { userStravaId: req.query.userStravaId, startDate: {$gte: dateStart, $lte: dateEnd } } }, { $group: { _id: { year: { $year: "$startDate" }, week: { $week: "$startDate" } }, sumTime: { $sum: "$movingTime" }, sumLength: { $sum: "$distance" } } }, { $sort: { _id: 1 } } ]);
+        console.log('Find success: ' + result);
+        res.status(200).send(result);
+    } catch(err) {
+        console.log('Find error: ' + err);
+        res.status(400).send("Hittade inga aktiviteter");
+    }        
+});
 app.get('/stravaCallback', async (req, res) => {
     if (req.query.error !== undefined) {
         console.log('Strava error: ' + req.query.error);
