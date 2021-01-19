@@ -515,7 +515,7 @@ app.get('/api/v1/strava/activities/between', (req, res) => {
             }        
         })
 //        res.redirect('https://trbok.niklasking.com');
-        res.send(200).send('Ok');
+        res.status(200).send('Ok');
     })
     .catch( err => res.status(400).send([]));
 
