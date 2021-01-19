@@ -8,6 +8,7 @@ const passport = require('passport');
 //const bodyParser = require('body-parser');
 const User = require('./models/user');
 const Activity = require('./models/activity');
+const Day = require('./models/day');
 const secret = require('./secret');
 
 const expressSession = require('express-session')({
@@ -31,7 +32,7 @@ mongoose.connect('mongodb://localhost/trdagbok', {
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-  // we're connected!
+  // we're connected! 
 });
 /*
 app.use(function (req, res, next) {
@@ -234,8 +235,18 @@ app.post('/api/v1/login',  function(req, res) {
 //                            const token =  jwt.sign({userId : user._id,  
 //                            username:user.username}, secretkey,  
 //                                {expiresIn: '24h'}) 
-//                            res.json({success:true, message:"Authentication successful", token: token }); 
-                            res.json({success:true, message:"Authentication successful", user: user }); 
+//                            res.json({success:true, message:"Authentication successful", token: token });
+                            const foundUser = {
+                                admin: user.admin,
+                                email: user.email,
+                                name: user.name,
+                                private: user.private,
+                                stravaId: user.stravaId,
+                                useStrava: user.useStrava,
+                                _id: user._id
+                            };
+                            res.json({success:true, message:"Authentication successful", user: foundUser }); 
+//                            res.json({success:true, message:"Authentication successful", user: user }); 
                         } 
                         }) 
                     } 
@@ -508,6 +519,37 @@ app.get('/api/v1/strava/activities/between', (req, res) => {
     })
     .catch( err => res.status(400).send([]));
 
+});
+app.get('/api/v1/days', async (req, res) => {
+    try {
+        const dateStart = req.query.dateStart;
+        const dateEnd = req.query.dateEnd;
+        const result = await Day.find({ user: req.query.user, startDate: {$gte: dateStart, $lte: dateEnd } }).sort({startDate: 1});
+        res.status(200).send(result);
+    } catch(err) {
+//        console.log('Find error: ' + err);
+        res.status(400).send("Day events error: " + err);
+    }
+});
+app.post('/api/v1/days', async (req, res) => {
+    try {
+        const day =
+            {
+                startDate: new Date(req.body.startDate),
+                skada: req.body.skada,
+                sjuk: req.body.sjuk,
+                user: req.body.user
+            };
+        const query = { startDate: day.startDate, user: day.user };
+        const options = { upsert: true, new: true };
+//        const options = { upsert: true, new: true, setDefaultsOnInsert: true };
+ //       const result = await Day.findOneAndReplace(query, day, options);
+        const result = await Day.updateOne(query, day, options);
+        res.status(200).send(result);
+    } catch(err) {
+        console.log('Save error: ' + err);
+        res.status(400).send("Det gick inte att spara dagen. " + err);
+    }
 });
 
 // Creates the endpoint for our webhook
