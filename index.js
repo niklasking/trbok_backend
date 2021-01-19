@@ -163,6 +163,8 @@ app.get('/api/v1/summary/week', async (req, res) => {
 //        const dateEnd = req.query.dateEnd;
         const dateStart = new Date(req.query.dateStart);
         const dateEnd = new Date(req.query.dateEnd);
+        console.log("dateStart: " + dateStart);
+        console.log("dateEnd: " + dateEnd);
         const result = await Activity.aggregate([ { $match: { userStravaId: req.query.userStravaId, startDate: {$gte: dateStart, $lte: dateEnd } } }, { $group: { _id: { year: { $isoWeekYear: "$startDate" }, week: { $isoWeek: "$startDate" } }, sumTime: { $sum: "$movingTime" }, sumLength: { $sum: "$distance" } } }, { $sort: { _id: 1 } } ]);
 //        console.log('Find success: ' + result);
         res.status(200).send(result);
