@@ -158,15 +158,9 @@ getStravaActivity = async (accessToken, activityId) => {
 
 app.get('/api/v1/summary/week', async (req, res) => {
     try {
-//        console.log('Saving... ' + req.query.user);
-//        const dateStart = req.query.dateStart;
-//        const dateEnd = req.query.dateEnd;
         const dateStart = new Date(req.query.dateStart);
         const dateEnd = new Date(req.query.dateEnd);
-        console.log("dateStart: " + dateStart);
-        console.log("dateEnd: " + dateEnd);
         const result = await Activity.aggregate([ { $match: { userStravaId: req.query.userStravaId, startDate: {$gte: dateStart, $lte: dateEnd } } }, { $group: { _id: { year: { $isoWeekYear: "$startDate" }, week: { $isoWeek: "$startDate" } }, sumTime: { $sum: "$movingTime" }, sumLength: { $sum: "$distance" } } }, { $sort: { _id: 1 } } ]);
-//        console.log('Find success: ' + result);
         res.status(200).send(result);
     } catch(err) {
         console.log('Find error: ' + err);
@@ -309,7 +303,8 @@ app.post('/api/v1/activities', async (req, res) => {
                 alternative: req.body.alternative,
                 forest: req.body.forest,
                 path: req.body.path,
-                user: req.body.user._id
+                user: req.body.user._id,
+                userStravaId: req.body.user.stravaId
             }
         );
         const result = await activity.save();
@@ -602,7 +597,8 @@ app.post('/stravaWebhook', async (req, res) => {
                         strength: strength,
                         alternative: alternative,
                         forest: 0,
-                        path: 0
+                        path: 0,
+                        userStravaId: userData.stravaId
                     }
                 );
 //                console.log('Denna ska sparas: ' + activityId); 
