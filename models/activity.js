@@ -35,8 +35,12 @@ const ActivitySchema = new Schema(
             ref: 'User',
             required: true
         },
-        userStravaId: String
-    },
+        userStravaId: String,
+        typePlanned: String,
+        movingTimePlanned: Number,
+        distancePlanned: Number,
+        namePlanned: String
+},
     { collection: 'activity' }
 );
 module.exports = mongoose.model('Activity', ActivitySchema );

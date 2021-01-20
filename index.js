@@ -304,9 +304,14 @@ app.post('/api/v1/activities', async (req, res) => {
                 forest: req.body.forest,
                 path: req.body.path,
                 user: req.body.user._id,
-                userStravaId: req.body.user.stravaId
+                userStravaId: req.body.user.stravaId,
+                typePlanned: req.body.typePlanned,
+                movingTimePlanned: req.body.movingTimePlanned,
+                distancePlanned: req.body.distancePlanned,
+                namePlanned: req.body.namePlanned
             }
         );
+        console.log(activity);
         const result = await activity.save();
         res.status(200).send(result);
     } catch(err) {
@@ -328,8 +333,12 @@ app.patch('/api/v1/activities', async (req, res) => {
             strength: req.body.strength,
             alternative: req.body.alternative,
             forest: req.body.forest,
-            path: req.body.path
-        };
+            path: req.body.path,
+            typePlanned: req.body.typePlanned,
+            movingTimePlanned: req.body.movingTimePlanned,
+            distancePlanned: req.body.distancePlanned,
+            namePlanned: req.body.namePlanned
+    };
         const result = await Activity.findByIdAndUpdate(req.body._id, activity, { upsert: true });
         res.status(200).send(result);
     } catch(err) {
