@@ -578,7 +578,7 @@ app.post('/stravaWebhook', async (req, res) => {
 
                 const startOfDay = moment(item.start_date).format('YYYY-MM-DD 00:00:00');
                 const endOfDay = moment(item.start_date).format('YYYY-MM-DD 23:59:59');
-                const dayActivities = await Activity.find({ stravaUserId: stravaUserId, startDate: {$gte: startOfDay, $lte: endOfDay } });
+                const dayActivities = await Activity.find({ userStravaId: userStravaId, startDate: {$gte: startOfDay, $lte: endOfDay } });
                 console.log("****** Found for day *******");
                 console.log(dayActivities);
                 console.log("****** Found for day *******");
