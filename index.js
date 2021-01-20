@@ -563,9 +563,9 @@ app.post('/stravaWebhook', async (req, res) => {
     console.log("webhook event received!", req.query, req.body);
     if (req.body.object_type === 'activity' && req.body.aspect_type === 'create') {
         try {
-            const stravaUserId = req.body.owner_id;
+            const userStravaId = req.body.owner_id;
             const activityId = req.body.object_id;
-            const accessToken = await authorize(stravaUserId);
+            const accessToken = await authorize(userStravaId);
 //            const accessToken = await authorize(req.body.owner_id);
 //            console.log('**Authorized: ' + accessToken);
             const result = await getStravaActivity(accessToken, activityId);
@@ -616,7 +616,7 @@ app.post('/stravaWebhook', async (req, res) => {
                         alternative: alternative,
                         forest: 0,
                         path: 0,
-                        userStravaId: stravaUserId
+                        userStravaId: userStravaId
                     }
                 );
 //                console.log('Denna ska sparas: ' + activityId); 
