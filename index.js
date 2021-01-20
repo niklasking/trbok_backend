@@ -563,8 +563,9 @@ app.post('/stravaWebhook', async (req, res) => {
     console.log("webhook event received!", req.query, req.body);
     if (req.body.object_type === 'activity' && req.body.aspect_type === 'create') {
         try {
+            const stravaUserId = req.body.object_id;
             const activityId = req.body.object_id;
-            const accessToken = await authorize(req.body.owner_id);
+            const accessToken = await authorize(stravaUserId);
 //            console.log('**Authorized: ' + accessToken);
             const result = await getStravaActivity(accessToken, activityId);
 //            console.log('Result: ' + result);
@@ -572,8 +573,15 @@ app.post('/stravaWebhook', async (req, res) => {
                 //const item = result[0];
                 const item = result;
 //                console.log("Found activity: " + item);
-
                 const startTime = moment(item.start_date).format('HH:mm');
+
+                const startOfDay = moment(item.start_date).format('YYYY-MM-DD 00:00:00');
+                const endOfDay = moment(item.start_date).format('YYYY-MM-DD 23:59:59');
+                const dayActivities = await Activity.find({ stravaUserId: stravaUserId, startDate: {$gte: startOfDay, $lte: endOfDay } });
+                console.log("****** Found for day *******");
+                console.log(dayActivities);
+                console.log("****** Found for day *******");
+                
                 const lsd = item.moving_time > 5400 ? 1 : 0;
                 const strength = item.type === 'WeightTraining' ? 1 : 0;
                 const alternative = item.type === 'Swim' || item.type === 'Ride' || item.type === 'VirtualRide' || item.type === 'Walk' || item.type === 'Workout' ? 1 : 0;
@@ -607,7 +615,7 @@ app.post('/stravaWebhook', async (req, res) => {
                         alternative: alternative,
                         forest: 0,
                         path: 0,
-                        userStravaId: req.body.owner_id
+                        userStravaId: stravaUserId
                     }
                 );
 //                console.log('Denna ska sparas: ' + activityId); 
