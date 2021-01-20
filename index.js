@@ -607,7 +607,7 @@ app.post('/stravaWebhook', async (req, res) => {
                         alternative: alternative,
                         forest: 0,
                         path: 0,
-                        userStravaId: userData.stravaId
+                        userStravaId: req.body.owner_id
                     }
                 );
 //                console.log('Denna ska sparas: ' + activityId); 
