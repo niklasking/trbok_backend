@@ -566,14 +566,9 @@ app.post('/stravaWebhook', async (req, res) => {
             const userStravaId = req.body.owner_id;
             const activityId = req.body.object_id;
             const accessToken = await authorize(userStravaId);
-//            const accessToken = await authorize(req.body.owner_id);
-//            console.log('**Authorized: ' + accessToken);
             const result = await getStravaActivity(accessToken, activityId);
-//            console.log('Result: ' + result);
             if (result !== null) {
-                //const item = result[0];
                 const item = result;
-//                console.log("Found activity: " + item);
                 const startTime = moment(item.start_date).format('HH:mm');
 
                 const startOfDay = moment(item.start_date).format('YYYY-MM-DD 00:00:00');
@@ -581,6 +576,18 @@ app.post('/stravaWebhook', async (req, res) => {
                 const dayActivities = await Activity.find({ userStravaId: userStravaId, startDate: {$gte: startOfDay, $lte: endOfDay } });
                 console.log("****** Found for day *******");
                 console.log(dayActivities);
+                const namePlanned = '';
+                const typePlanned = '';
+                const movingTimePlanned = 0;
+                const distancePlanned = 0;
+                if (dayActivities.length > 0) {
+                    namePlanned = dayActivities[0].namePlanned;
+                    typePlanned = dayActivities[0].typePlanned;
+                    movingTimePlanned = dayActivities[0].movingTimePlanned;
+                    distancePlanned = dayActivities[0].distancePlanned;
+
+                    await Activity.findByIdAndRemove(dayActivities[0]._id);
+                }
                 console.log("****** Found for day *******");
                 
                 const lsd = item.moving_time > 5400 ? 1 : 0;
@@ -616,7 +623,11 @@ app.post('/stravaWebhook', async (req, res) => {
                         alternative: alternative,
                         forest: 0,
                         path: 0,
-                        userStravaId: userStravaId
+                        userStravaId: userStravaId,
+                        namePlanned: namePlanned,
+                        typePlanned: typePlanned,
+                        movingTimePlanned: movingTimePlanned,
+                        distancePlanned: distancePlanned
                     }
                 );
 //                console.log('Denna ska sparas: ' + activityId); 
