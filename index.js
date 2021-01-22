@@ -576,10 +576,10 @@ app.post('/stravaWebhook', async (req, res) => {
                 const dayActivities = await Activity.find({ userStravaId: userStravaId, startDate: {$gte: startOfDay, $lte: endOfDay } });
                 console.log("****** Found for day *******");
                 console.log(dayActivities);
-                const namePlanned = '';
-                const typePlanned = '';
-                const movingTimePlanned = 0;
-                const distancePlanned = 0;
+                let namePlanned = '';
+                let typePlanned = '';
+                let movingTimePlanned = 0;
+                let distancePlanned = 0;
                 if (dayActivities.length > 0) {
                     namePlanned = dayActivities[0].namePlanned;
                     typePlanned = dayActivities[0].typePlanned;
