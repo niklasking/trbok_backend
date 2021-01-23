@@ -581,12 +581,34 @@ app.post('/stravaWebhook', async (req, res) => {
                 let movingTimePlanned = 0;
                 let distancePlanned = 0;
                 if (dayActivities.length > 0) {
-                    namePlanned = dayActivities[0].namePlanned;
-                    typePlanned = dayActivities[0].typePlanned;
-                    movingTimePlanned = dayActivities[0].movingTimePlanned;
-                    distancePlanned = dayActivities[0].distancePlanned;
-
-                    await Activity.findByIdAndRemove(dayActivities[0]._id);
+                    if (dayActivities.length > 1) {
+                        let found = false;
+                        for (let i = 0; i < dayActivities.length; i++) {
+                            if (!found) {
+                                if (dayActivities[i].typePlanned === item.type) {
+                                    found = true;
+                                    namePlanned = dayActivities[i].namePlanned;
+                                    typePlanned = dayActivities[i].typePlanned;
+                                    movingTimePlanned = dayActivities[i].movingTimePlanned;
+                                    distancePlanned = dayActivities[i].distancePlanned;
+                                    await Activity.findByIdAndRemove(dayActivities[i]._id);
+                                }
+                            }
+                        }
+                        if (!found) {
+                            namePlanned = dayActivities[0].namePlanned;
+                            typePlanned = dayActivities[0].typePlanned;
+                            movingTimePlanned = dayActivities[0].movingTimePlanned;
+                            distancePlanned = dayActivities[0].distancePlanned;
+                            await Activity.findByIdAndRemove(dayActivities[0]._id);    
+                        }
+                    } else {
+                        namePlanned = dayActivities[0].namePlanned;
+                        typePlanned = dayActivities[0].typePlanned;
+                        movingTimePlanned = dayActivities[0].movingTimePlanned;
+                        distancePlanned = dayActivities[0].distancePlanned;
+                        await Activity.findByIdAndRemove(dayActivities[0]._id);
+                    }
                 }
                 console.log("****** Found for day *******");
                 
