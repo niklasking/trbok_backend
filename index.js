@@ -488,65 +488,63 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
     const before = req.query.before;
     const after = req.query.after;
     const userStravaId = req.query.stravaId;
-    authorize(userStravaId)
-    .then( accessToken => getAdditionalBetweenStravaActivities(accessToken, before, after))
-    .then( result => {
+//    authorize(userStravaId)
+//    .then( accessToken => getAdditionalBetweenStravaActivities(accessToken, before, after))
+//    .then( result => {
+    try {
+        await authorize(userStravaId);
+        let result = await getAdditionalBetweenStravaActivities(accessToken, before, after);
         result.map( item => {
-            try {
-                // Get laps
-                const laps = await getStravaLaps(item.id);
-                console.log(laps);
-                // Save activity
-                const startTime = moment(item.start_date).format('HH:mm');
-                const lsd = item.moving_time > 5400 ? 1 : 0;
-                const strength = item.type === 'WeightTraining' ? 1 : 0;
-                const alternative = item.type === 'Swim' || item.type === 'Ride' || item.type === 'VirtualRide' || item.type === 'Walk' || item.type === 'Workout' ? 1 : 0;
-                const activity = new Activity(
-                    {
-                        name: startTime + ' ' + item.name,
-                        distance: item.distance,
-                        movingTime: item.moving_time,
-                        totalElevationGain: item.total_elevation_gain,
-                        type: item.type,
-                        stravaId: item.id,
-                        startDate: new Date(item.start_date),
+            // Get laps
+            const laps = await getStravaLaps(item.id);
+            console.log(laps);
+            // Save activity
+            const startTime = moment(item.start_date).format('HH:mm');
+            const lsd = item.moving_time > 5400 ? 1 : 0;
+            const strength = item.type === 'WeightTraining' ? 1 : 0;
+            const alternative = item.type === 'Swim' || item.type === 'Ride' || item.type === 'VirtualRide' || item.type === 'Walk' || item.type === 'Workout' ? 1 : 0;
+            const activity = new Activity(
+                {
+                    name: startTime + ' ' + item.name,
+                    distance: item.distance,
+                    movingTime: item.moving_time,
+                    totalElevationGain: item.total_elevation_gain,
+                    type: item.type,
+                    stravaId: item.id,
+                    startDate: new Date(item.start_date),
 //                        startDateLocal: new Date(item.start_date_local),
-                        startLat: item.start_latitude,
-                        startLong: item.start_longitude,
-                        mapPolyline: item.map.summary_polyline,
-                        averageSpeed: item.average_speed,
-                        maxSpeed: item.max_speed,
-                        averageCadence: item.average_cadence,
-                        maxCadence: item.max_cadense,
-                        averageHeartrate: item.average_heartrate,
-                        maxHeartRate: item.max_heartrate,
-                        elevationHighest: item.elev_high,
-                        elevationLowest: item.elev_low,
-                        user: userData._id,
-                        userStravaId: userStravaId,
-                        title: startTime,
-                        ol: 0,
-                        night: 0, // Natt-OL
-                        quality: 0,
-                        lsd: lsd, // Långpass,
-                        strength: strength,
-                        alternative: alternative,
-                        forest: 0,
-                        path: 0
-//                        laps: [laps]
-                    }
-                );
-                activity.save();
-            } catch(err) {
-                console.log(err);
-                res.status(400).json({ success: false, message: err.message });
-            }        
-        })
-//        res.redirect('https://trbok.niklasking.com');
+                    startLat: item.start_latitude,
+                    startLong: item.start_longitude,
+                    mapPolyline: item.map.summary_polyline,
+                    averageSpeed: item.average_speed,
+                    maxSpeed: item.max_speed,
+                    averageCadence: item.average_cadence,
+                    maxCadence: item.max_cadense,
+                    averageHeartrate: item.average_heartrate,
+                    maxHeartRate: item.max_heartrate,
+                    elevationHighest: item.elev_high,
+                    elevationLowest: item.elev_low,
+                    user: userData._id,
+                    userStravaId: userStravaId,
+                    title: startTime,
+                    ol: 0,
+                    night: 0, // Natt-OL
+                    quality: 0,
+                    lsd: lsd, // Långpass,
+                    strength: strength,
+                    alternative: alternative,
+                    forest: 0,
+                    path: 0,
+                    laps: [laps]
+                }
+            );
+            activity.save();
+        });
         res.status(200).send('Ok');
-    })
-    .catch( err => res.status(400).send([]));
-
+    }
+    catch(err) {
+        res.status(400).json({ success: false, message: err });
+    }
 });
 app.get('/api/v1/days', async (req, res) => {
     try {
