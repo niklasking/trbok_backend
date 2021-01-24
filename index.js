@@ -492,15 +492,18 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
 //    .then( accessToken => getAdditionalBetweenStravaActivities(accessToken, before, after))
 //    .then( result => {
     try {
+        console.log("Time to authorize " + userStravaId);
         await authorize(userStravaId);
-        console.log(accessToken);
+        console.log("Authorized: " + accessToken);
         let result = await getAdditionalBetweenStravaActivities(accessToken, before, after);
 //        result.map( item => {
             // Get laps
 //            const laps = await getStravaLaps(item.id);
 //            console.log(laps);
             // Save activity
+        console.log("Found: " + result);
         for (let i = 0; i < result.length; i++) {
+            console.log("Activity " + i);
             const startTime = moment(result[i].start_date).format('HH:mm');
             const lsd = result[i].moving_time > 5400 ? 1 : 0;
             const strength = result[i].type === 'WeightTraining' ? 1 : 0;
