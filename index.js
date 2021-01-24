@@ -494,36 +494,37 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
     try {
         authorize(userStravaId);
         let result = getAdditionalBetweenStravaActivities(accessToken, before, after);
-        result.map( item => {
+//        result.map( item => {
             // Get laps
 //            const laps = await getStravaLaps(item.id);
 //            console.log(laps);
             // Save activity
-            const startTime = moment(item.start_date).format('HH:mm');
-            const lsd = item.moving_time > 5400 ? 1 : 0;
-            const strength = item.type === 'WeightTraining' ? 1 : 0;
-            const alternative = item.type === 'Swim' || item.type === 'Ride' || item.type === 'VirtualRide' || item.type === 'Walk' || item.type === 'Workout' ? 1 : 0;
+        for (let i = 0; i < result.length; i++) {
+            const startTime = moment(result[i].start_date).format('HH:mm');
+            const lsd = result[i].moving_time > 5400 ? 1 : 0;
+            const strength = result[i].type === 'WeightTraining' ? 1 : 0;
+            const alternative = result[i].type === 'Swim' || result[i].type === 'Ride' || result[i].type === 'VirtualRide' || result[i].type === 'Walk' || result[i].type === 'Workout' ? 1 : 0;
             const activity = new Activity(
                 {
-                    name: startTime + ' ' + item.name,
-                    distance: item.distance,
-                    movingTime: item.moving_time,
-                    totalElevationGain: item.total_elevation_gain,
-                    type: item.type,
-                    stravaId: item.id,
-                    startDate: new Date(item.start_date),
+                    name: startTime + ' ' + result[i].name,
+                    distance: result[i].distance,
+                    movingTime: result[i].moving_time,
+                    totalElevationGain: result[i].total_elevation_gain,
+                    type: result[i].type,
+                    stravaId: result[i].id,
+                    startDate: new Date(result[i].start_date),
 //                        startDateLocal: new Date(item.start_date_local),
-                    startLat: item.start_latitude,
-                    startLong: item.start_longitude,
-                    mapPolyline: item.map.summary_polyline,
-                    averageSpeed: item.average_speed,
-                    maxSpeed: item.max_speed,
-                    averageCadence: item.average_cadence,
-                    maxCadence: item.max_cadense,
-                    averageHeartrate: item.average_heartrate,
-                    maxHeartRate: item.max_heartrate,
-                    elevationHighest: item.elev_high,
-                    elevationLowest: item.elev_low,
+                    startLat: result[i].start_latitude,
+                    startLong: result[i].start_longitude,
+                    mapPolyline: result[i].map.summary_polyline,
+                    averageSpeed: result[i].average_speed,
+                    maxSpeed: result[i].max_speed,
+                    averageCadence: result[i].average_cadence,
+                    maxCadence: result[i].max_cadense,
+                    averageHeartrate: result[i].average_heartrate,
+                    maxHeartRate: result[i].max_heartrate,
+                    elevationHighest: result[i].elev_high,
+                    elevationLowest: result[i].elev_low,
                     user: userData._id,
                     userStravaId: userStravaId,
                     title: startTime,
@@ -536,10 +537,9 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     forest: 0,
                     path: 0
 //                    laps: [laps]
-                }
-            );
-            activity.save();
-        });
+            });
+            await activity.save();
+        };
         res.status(200).send('Ok');
     }
     catch(err) {
