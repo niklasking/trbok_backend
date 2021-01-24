@@ -1,7 +1,30 @@
 const mongoose = require('mongoose');
-const LapSchema = require('./lapSchema');
+//const LapSchema = require('./lapSchema');
 
 const Schema = mongoose.Schema;
+
+const LapSchema = new Schema(    
+    {
+        id: Number,
+        averageCadence: Number,
+        averageSpeed: Number,
+        distance: Number,
+        elapsedTime: Number,
+        startIndex: Number,
+        endIndex: Number,
+        lapIndex: Number,
+        maxSpeed: Number,
+        movingTime: Number,
+        name: String,
+        paceZone: Number,
+        split: Number,
+        startDate: Date,
+        startDateLocal: Date,
+        totalElevationGain: Number
+    }
+//    { collection: 'lap' }
+);
+
 const ActivitySchema = new Schema(    
     {
         name: String,
