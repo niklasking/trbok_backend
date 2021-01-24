@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 //const LapSchema = require('./lapSchema');
 
 const Schema = mongoose.Schema;
-
+/*
 const LapSchema = new Schema(    
     {
         id: Number,
@@ -24,7 +24,7 @@ const LapSchema = new Schema(
     }
 //    { collection: 'lap' }
 );
-
+*/
 const ActivitySchema = new Schema(    
     {
         name: String,
