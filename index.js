@@ -141,6 +141,19 @@ getAdditionalBetweenStravaActivities = async (accessToken, before, after) => {
         return [];
     }
 };
+getStravaLaps = async (accessToken, activityId) => {
+    try {
+        const response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/laps', {
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            }
+        });
+        return response.data;
+    } catch(err) {
+        console.log(err);
+        return [];
+    }
+};
 
 getStravaActivity = async (accessToken, activityId) => {
     try {
@@ -291,6 +304,7 @@ app.post('/api/v1/activities', async (req, res) => {
         const activity = new Activity(
             {
                 startDate: new Date(req.body.startDate),
+                startDateLocal: new Date(req.body.startDate),
                 name: req.body.name,
                 distance: req.body.distance,
                 type: req.body.type,
@@ -375,6 +389,7 @@ app.get('/api/v1/strava/activities', (req, res) => {
                         type: item.type,
                         stravaId: item.id,
                         startDate: new Date(item.start_date),
+                        startDateLocal: new Date(item.start_date_local),
                         startLat: item.start_latitude,
                         startLong: item.start_longitude,
                         mapPolyline: item.map.summary_polyline,
@@ -432,6 +447,7 @@ app.get('/api/v1/strava/activities/before', (req, res) => {
                         type: item.type,
                         stravaId: item.id,
                         startDate: new Date(item.start_date),
+                        startDateLocal: new Date(item.start_date_local),
                         startLat: item.start_latitude,
                         startLong: item.start_longitude,
                         mapPolyline: item.map.summary_polyline,
@@ -468,7 +484,7 @@ app.get('/api/v1/strava/activities/before', (req, res) => {
     .catch( err => res.send([]));
 
 });
-app.get('/api/v1/strava/activities/between', (req, res) => {
+app.get('/api/v1/strava/activities/between', async (req, res) => {
     const before = req.query.before;
     const after = req.query.after;
     const userStravaId = req.query.stravaId;
@@ -477,6 +493,9 @@ app.get('/api/v1/strava/activities/between', (req, res) => {
     .then( result => {
         result.map( item => {
             try {
+                // Get laps
+                const laps = await getStravaLaps(item.id);
+                // Save activity
                 const startTime = moment(item.start_date).format('HH:mm');
                 const lsd = item.moving_time > 5400 ? 1 : 0;
                 const strength = item.type === 'WeightTraining' ? 1 : 0;
@@ -490,6 +509,7 @@ app.get('/api/v1/strava/activities/between', (req, res) => {
                         type: item.type,
                         stravaId: item.id,
                         startDate: new Date(item.start_date),
+                        startDateLocal: new Date(item.start_date_local),
                         startLat: item.start_latitude,
                         startLong: item.start_longitude,
                         mapPolyline: item.map.summary_polyline,
@@ -511,7 +531,8 @@ app.get('/api/v1/strava/activities/between', (req, res) => {
                         strength: strength,
                         alternative: alternative,
                         forest: 0,
-                        path: 0
+                        path: 0,
+                        laps: laps
                     }
                 );
                 activity.save();
@@ -624,6 +645,7 @@ app.post('/stravaWebhook', async (req, res) => {
                         type: item.type,
                         stravaId: item.id,
                         startDate: new Date(item.start_date),
+                        startDateLocal: new Date(item.start_date_local),
                         startLat: item.start_latitude,
                         startLong: item.start_longitude,
                         mapPolyline: item.map.summary_polyline,

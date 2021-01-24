@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Lap = require('./lap');
 
 const Schema = mongoose.Schema;
 const ActivitySchema = new Schema(    
@@ -10,6 +11,7 @@ const ActivitySchema = new Schema(
         type: String,
         stravaId: Number,
         startDate: Date,
+        startDateLocal: Date,
         startLat: Number,
         startLong: Number,
         mapPolyline: String,
@@ -39,7 +41,8 @@ const ActivitySchema = new Schema(
         typePlanned: String,
         movingTimePlanned: Number,
         distancePlanned: Number,
-        namePlanned: String
+        namePlanned: String,
+        laps: [ Lap ]
 },
     { collection: 'activity' }
 );
