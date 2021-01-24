@@ -493,6 +493,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
 //    .then( result => {
     try {
         authorize(userStravaId);
+        console.log(accessToken);
         let result = getAdditionalBetweenStravaActivities(accessToken, before, after);
 //        result.map( item => {
             // Get laps
