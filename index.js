@@ -496,8 +496,8 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
         let result = await getAdditionalBetweenStravaActivities(accessToken, before, after);
         result.map( item => {
             // Get laps
-            const laps = await getStravaLaps(item.id);
-            console.log(laps);
+//            const laps = await getStravaLaps(item.id);
+//            console.log(laps);
             // Save activity
             const startTime = moment(item.start_date).format('HH:mm');
             const lsd = item.moving_time > 5400 ? 1 : 0;
