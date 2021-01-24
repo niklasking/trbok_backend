@@ -19,8 +19,8 @@ const LapSchema = new Schema(
         startDate: Date,
         startDateLocal: Date,
         totalElevationGain: Number
-    },
-    { collection: 'lap' }
+    }
+//    { collection: 'lap' }
 );
 //module.exports = mongoose.model('Lap', LapSchema );
 export default LapSchema;
