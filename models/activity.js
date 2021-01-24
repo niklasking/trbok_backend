@@ -42,7 +42,7 @@ const ActivitySchema = new Schema(
         movingTimePlanned: Number,
         distancePlanned: Number,
         namePlanned: String,
-        laps: [ Lap ]
+        laps: [ LapSchema ]
 },
     { collection: 'activity' }
 );
