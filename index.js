@@ -492,8 +492,8 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
 //    .then( accessToken => getAdditionalBetweenStravaActivities(accessToken, before, after))
 //    .then( result => {
     try {
-        await authorize(userStravaId);
-        let result = await getAdditionalBetweenStravaActivities(accessToken, before, after);
+        authorize(userStravaId);
+        let result = getAdditionalBetweenStravaActivities(accessToken, before, after);
         result.map( item => {
             // Get laps
 //            const laps = await getStravaLaps(item.id);
@@ -538,7 +538,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
 //                    laps: [laps]
                 }
             );
-            await activity.save();
+            activity.save();
         });
         res.status(200).send('Ok');
     }
