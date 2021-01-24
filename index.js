@@ -389,7 +389,7 @@ app.get('/api/v1/strava/activities', (req, res) => {
                         type: item.type,
                         stravaId: item.id,
                         startDate: new Date(item.start_date),
-                        startDateLocal: new Date(item.start_date_local),
+//                        startDateLocal: new Date(item.start_date_local),
                         startLat: item.start_latitude,
                         startLong: item.start_longitude,
                         mapPolyline: item.map.summary_polyline,
@@ -447,7 +447,7 @@ app.get('/api/v1/strava/activities/before', (req, res) => {
                         type: item.type,
                         stravaId: item.id,
                         startDate: new Date(item.start_date),
-                        startDateLocal: new Date(item.start_date_local),
+//                        startDateLocal: new Date(item.start_date_local),
                         startLat: item.start_latitude,
                         startLong: item.start_longitude,
                         mapPolyline: item.map.summary_polyline,
@@ -510,7 +510,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         type: item.type,
                         stravaId: item.id,
                         startDate: new Date(item.start_date),
-                        startDateLocal: new Date(item.start_date_local),
+//                        startDateLocal: new Date(item.start_date_local),
                         startLat: item.start_latitude,
                         startLong: item.start_longitude,
                         mapPolyline: item.map.summary_polyline,
@@ -532,7 +532,8 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         strength: strength,
                         alternative: alternative,
                         forest: 0,
-                        path: 0
+                        path: 0,
+                        laps: [laps]
                     }
                 );
                 activity.save();
@@ -645,7 +646,7 @@ app.post('/stravaWebhook', async (req, res) => {
                         type: item.type,
                         stravaId: item.id,
                         startDate: new Date(item.start_date),
-                        startDateLocal: new Date(item.start_date_local),
+//                        startDateLocal: new Date(item.start_date_local),
                         startLat: item.start_latitude,
                         startLong: item.start_longitude,
                         mapPolyline: item.map.summary_polyline,
