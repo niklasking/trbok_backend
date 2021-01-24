@@ -495,6 +495,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
             try {
                 // Get laps
                 const laps = await getStravaLaps(item.id);
+                console.log(laps);
                 // Save activity
                 const startTime = moment(item.start_date).format('HH:mm');
                 const lsd = item.moving_time > 5400 ? 1 : 0;
@@ -532,7 +533,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         alternative: alternative,
                         forest: 0,
                         path: 0,
-                        laps: laps
+                        laps: [laps]
                     }
                 );
                 activity.save();

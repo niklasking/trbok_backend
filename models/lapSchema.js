@@ -22,4 +22,5 @@ const LapSchema = new Schema(
     },
     { collection: 'lap' }
 );
-module.exports = mongoose.model('Lap', LapSchema );
+//module.exports = mongoose.model('Lap', LapSchema );
+export default LapSchema;

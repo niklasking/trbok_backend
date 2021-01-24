@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Lap = require('./lap');
+const LapSchema = require('./lapSchema');
 
 const Schema = mongoose.Schema;
 const ActivitySchema = new Schema(    
