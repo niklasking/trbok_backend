@@ -97,6 +97,7 @@ authorize = async (stravaUserId) => {
             accessToken: response.data.access_token
         }
         userData = foundUserData;
+        console.log('Access token:' + userData.accessToken);
         return userData.accessToken;
     } catch(err) {
         console.log('Det gick inte att authenticera mot Strava.');
@@ -500,7 +501,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
 //    .then( result => {
     try {
         console.log("Time to authorize " + userStravaId);
-        authorize(userStravaId);
+        const accessToken = authorize(userStravaId);
         console.log("Authorized: " + accessToken);
         let result = getAdditionalBetweenStravaActivities(accessToken, before, after);
 //        result.map( item => {
