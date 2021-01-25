@@ -552,6 +552,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     laps: [laps]
             });
             await activity.save();
+            console.log(activity);
         };
         res.status(200).send('Ok');
     }
