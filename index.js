@@ -66,7 +66,6 @@ passport.use(new LocalStrategy(User.authenticate()));
     
 
 authorize = async (stravaUserId) => {
-//    console.log('Authorize: ' + stravaUserId);
     try {
         const user = await User.find({ stravaId: stravaUserId });
         if (user === null) {
@@ -74,30 +73,21 @@ authorize = async (stravaUserId) => {
         } else if (user.length === 0) {
             return null;
         }
-        console.log('** Found user: ' + user);
-        console.log('Authorize mot Strava');
         const response = await axios.post('https://www.strava.com/api/v3/oauth/token', {
             client_id: secret.clientID,
             client_secret: secret.clientSecret,
             refresh_token: user[0].refreshToken,
             grant_type: 'refresh_token'
         });
-        console.log('Strava authorized: ' + response.data);
-//        console.log('Refresh: ' + response.data.refresh_token);
-//        console.log('Access: ' + response.data.access_token);
-//        console.log('Expires: ' + response.data.expires_at);
         user[0].refreshToken = response.data.refresh_token;
         user[0].accessToken = response.data.access_token;
         user[0].expiresAt = response.data.expires_at;
-        console.log('Udpaterar användaren');
-        const refreshUser = await user[0].save();
-        console.log('Användaren uppdaterad');
+        await user[0].save();
         const foundUserData = {
             _id: user[0]._id,
             accessToken: response.data.access_token
         }
         userData = foundUserData;
-        console.log('Access token:' + userData.accessToken);
         return userData.accessToken;
     } catch(err) {
         console.log('Det gick inte att authenticera mot Strava.');
@@ -135,16 +125,13 @@ getAdditionalBeforeStravaActivities = async (accessToken, before) => {
 };
 getAdditionalBetweenStravaActivities = async (accessToken, before, after) => {
     try {
-        console.log('Fetching...');
         const response = await axios.get('https://www.strava.com/api/v3/athlete/activities?per_page=200&before=' + before + '&after=' + after, {
             headers: {
                 Authorization: 'Bearer ' + accessToken
             }
         });
-        console.log('Got back: ' + response.data);
         return response.data;
     } catch(err) {
-        console.log("Kunde inte hämta aktiviteter från Strava.");
         console.log(err);
         return [];
     }
@@ -496,22 +483,12 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
     const before = req.query.before;
     const after = req.query.after;
     const userStravaId = req.query.stravaId;
-//    authorize(userStravaId)
-//    .then( accessToken => getAdditionalBetweenStravaActivities(accessToken, before, after))
-//    .then( result => {
     try {
-        console.log("Time to authorize " + userStravaId);
         const accessToken = await authorize(userStravaId);
-        console.log("Authorized: " + accessToken);
         let result = await getAdditionalBetweenStravaActivities(accessToken, before, after);
-//        result.map( item => {
-        console.log("Found: " + result);
         for (let i = 0; i < result.length; i++) {
-            console.log("Activity " + i);
-            console.log(result[i]);
             // Get laps
             const laps = await getStravaLaps(accessToken, result[i].id);
-            console.log(laps);
             // Save activity
             const startTime = moment(result[i].start_date).format('HH:mm');
             const lsd = result[i].moving_time > 5400 ? 1 : 0;
@@ -552,6 +529,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     laps: [laps]
             });
             await activity.save();
+            console.log('antal laps: ' + activity.laps.length);
             for (let i = 0; i < activity.laps.length; i++) {
                 console.log('************');
                 console.log(activity.laps[i]);
