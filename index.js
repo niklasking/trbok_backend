@@ -552,7 +552,10 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     laps: [laps]
             });
             await activity.save();
-            console.log(activity);
+            for (let i = 0; i < activity.laps.length; i++) {
+                console.log('************');
+                console.log(activity.laps[i]);
+            }
         };
         res.status(200).send('Ok');
     }
