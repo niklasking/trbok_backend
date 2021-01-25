@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const LapSchema = require('./lapSchema');
+const Lap = require('./lap');
 
 const Schema = mongoose.Schema;
 
@@ -43,7 +43,7 @@ const ActivitySchema = new Schema(
         movingTimePlanned: Number,
         distancePlanned: Number,
         namePlanned: String,
-        laps: [ LapSchema ]
+        laps: [ Lap ]
 },
     { collection: 'activity' }
 );
