@@ -4,21 +4,21 @@ const Schema = mongoose.Schema;
 const LapSchema = new Schema(    
     {
         id: Number,
-        averageCadence: Number,
-        averageSpeed: Number,
+        average_cadence: Number,
+        average_speed: Number,
         distance: Number,
-        elapsedTime: Number,
-        startIndex: Number,
-        endIndex: Number,
-        lapIndex: Number,
-        maxSpeed: Number,
-        movingTime: Number,
+        elapsed_time: Number,
+        start_index: Number,
+        end_index: Number,
+        lap_index: Number,
+        max_speed: Number,
+        moving_time: Number,
         name: String,
-        paceZone: Number,
+        pace_zone: Number,
         split: Number,
-        startDate: Date,
-        startDateLocal: Date,
-        totalElevationGain: Number
+        start_date: Date,
+        start_dateLocal: Date,
+        total_elevation_gain: Number
     }
 //    { collection: 'lap' }
 );
