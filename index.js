@@ -151,7 +151,7 @@ getStravaLaps = async (accessToken, activityId) => {
 };
 getStravaStreams = async (accessToken, activityId) => {
     try {
-/*
+
         let response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/latlng', {
             headers: {
                 Authorization: 'Bearer ' + accessToken
@@ -166,8 +166,35 @@ getStravaStreams = async (accessToken, activityId) => {
         });
         console.log(response.data);
         console.log('**************');
-*/
-        let response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams', {
+        response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/altitude', {
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            }
+        });
+        console.log(response.data);
+        console.log('**************');
+        response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/velocity_smooth', {
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            }
+        });
+        console.log(response.data);
+        console.log('**************');
+        response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/cadence', {
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            }
+        });
+        console.log(response.data);
+        console.log('**************');
+        response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/watts', {
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            }
+        });
+        console.log(response.data);
+        console.log('**************');
+        response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/moving', {
             headers: {
                 Authorization: 'Bearer ' + accessToken
             }
@@ -175,6 +202,15 @@ getStravaStreams = async (accessToken, activityId) => {
         console.log(response.data);
         console.log('**************');
 
+/*
+        let response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams', {
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            }
+        });
+        console.log(response.data);
+        console.log('**************');
+*/
         return response.data;
     } catch(err) {
         console.log(err);
