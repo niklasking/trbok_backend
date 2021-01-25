@@ -501,9 +501,9 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
 //    .then( result => {
     try {
         console.log("Time to authorize " + userStravaId);
-        const accessToken = authorize(userStravaId);
+        const accessToken = await authorize(userStravaId);
         console.log("Authorized: " + accessToken);
-        let result = getAdditionalBetweenStravaActivities(accessToken, before, after);
+        let result = await getAdditionalBetweenStravaActivities(accessToken, before, after);
 //        result.map( item => {
             // Get laps
 //            const laps = await getStravaLaps(item.id);
