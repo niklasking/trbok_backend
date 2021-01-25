@@ -158,7 +158,7 @@ getStravaStreams = async (accessToken, activityId) => {
         });
         console.log(response.data);
         console.log('**************');
-        let response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/heartrate', {
+        response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/heartrate', {
             headers: {
                 Authorization: 'Bearer ' + accessToken
             }
