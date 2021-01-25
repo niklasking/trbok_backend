@@ -149,6 +149,20 @@ getStravaLaps = async (accessToken, activityId) => {
         return [];
     }
 };
+getStravaStreams = async (accessToken, activityId) => {
+    try {
+        const response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams', {
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch(err) {
+        console.log(err);
+        return [];
+    }
+};
 
 getStravaActivity = async (accessToken, activityId) => {
     try {
@@ -489,6 +503,8 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
         for (let i = 0; i < result.length; i++) {
             // Get laps
             const laps = await getStravaLaps(accessToken, result[i].id);
+            // Get streams
+            await getStravaStreams(accessToken, result[i].id);
             // Save activity
             const startTime = moment(result[i].start_date).format('HH:mm');
             const lsd = result[i].moving_time > 5400 ? 1 : 0;
@@ -529,7 +545,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     laps: laps
             });
             const doc = await activity.save();
-            console.log(doc);
+//            console.log(doc);
         };
         res.status(200).send('Ok');
     }
