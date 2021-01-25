@@ -548,8 +548,8 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     strength: strength,
                     alternative: alternative,
                     forest: 0,
-                    path: 0
-//                    laps: [laps]
+                    path: 0,
+                    laps: [laps]
             });
             await activity.save();
         };
