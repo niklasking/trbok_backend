@@ -526,7 +526,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     alternative: alternative,
                     forest: 0,
                     path: 0,
-                    laps: [laps]
+                    laps: laps
             });
             const doc = await activity.save();
             console.log(doc);
