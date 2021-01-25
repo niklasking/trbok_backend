@@ -156,7 +156,10 @@ getStravaStreams = async (accessToken, activityId) => {
                 Authorization: 'Bearer ' + accessToken
             }
         });
-        console.log(response.data);
+        for (let i = 0; i < response.data; i++) {
+            console.log(response.data[i].type);
+            console.log(response.data[i].data.length);
+        }
         return response.data;
     } catch(err) {
         console.log(err);
