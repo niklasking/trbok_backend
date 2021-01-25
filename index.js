@@ -510,7 +510,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
             console.log("Activity " + i);
             console.log(result[i]);
             // Get laps
-            const laps = await getStravaLaps(result[i].id);
+            const laps = await getStravaLaps(accessToken, result[i].id);
             console.log(laps);
             // Save activity
             const startTime = moment(result[i].start_date).format('HH:mm');
