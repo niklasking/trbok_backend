@@ -74,7 +74,7 @@ authorize = async (stravaUserId) => {
         } else if (user.length === 0) {
             return null;
         }
-//        console.log('** Found user: ' + user);
+        console.log('** Found user: ' + user);
         const response = await axios.post('https://www.strava.com/api/v3/oauth/token', {
             client_id: secret.clientID,
             client_secret: secret.clientSecret,
@@ -130,13 +130,16 @@ getAdditionalBeforeStravaActivities = async (accessToken, before) => {
 };
 getAdditionalBetweenStravaActivities = async (accessToken, before, after) => {
     try {
+        console.log('Fetching...');
         const response = await axios.get('https://www.strava.com/api/v3/athlete/activities?per_page=200&before=' + before + '&after=' + after, {
             headers: {
                 Authorization: 'Bearer ' + accessToken
             }
         });
+        console.log('Got back: ' + response.data);
         return response.data;
     } catch(err) {
+        console.log("Kunde inte hämta aktiviteter från Strava.");.
         console.log(err);
         return [];
     }
