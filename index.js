@@ -151,7 +151,9 @@ getStravaLaps = async (accessToken, activityId) => {
 };
 getStravaStreams = async (accessToken, activityId) => {
     try {
-        const response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams', {
+        const response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams' +
+                                        '?keys=[latlng, altitude, velocity_smooth, heartrate, cadence, ' +
+                                        'watts, moving, grade_smooth]&key_by_type=true', {
             headers: {
                 Authorization: 'Bearer ' + accessToken
             }
