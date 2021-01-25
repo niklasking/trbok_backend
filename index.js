@@ -75,20 +75,23 @@ authorize = async (stravaUserId) => {
             return null;
         }
         console.log('** Found user: ' + user);
+        console.log('Authorize mot Strava');
         const response = await axios.post('https://www.strava.com/api/v3/oauth/token', {
             client_id: secret.clientID,
             client_secret: secret.clientSecret,
             refresh_token: user[0].refreshToken,
             grant_type: 'refresh_token'
         });
+        console.log('Strava authorized: ' + response.data);
 //        console.log('Refresh: ' + response.data.refresh_token);
 //        console.log('Access: ' + response.data.access_token);
 //        console.log('Expires: ' + response.data.expires_at);
         user[0].refreshToken = response.data.refresh_token;
         user[0].accessToken = response.data.access_token;
         user[0].expiresAt = response.data.expires_at;
+        console.log('Udpaterar användaren');
         const refreshUser = await user[0].save();
-
+        console.log('Användaren uppdaterad');
         const foundUserData = {
             _id: user[0]._id,
             accessToken: response.data.access_token
@@ -96,6 +99,7 @@ authorize = async (stravaUserId) => {
         userData = foundUserData;
         return userData.accessToken;
     } catch(err) {
+        console.log('Det gick inte att authenticera mot Strava.');
         console.log(err);
         return null;
     }
