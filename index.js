@@ -139,7 +139,7 @@ getAdditionalBetweenStravaActivities = async (accessToken, before, after) => {
         console.log('Got back: ' + response.data);
         return response.data;
     } catch(err) {
-        console.log("Kunde inte hämta aktiviteter från Strava.");.
+        console.log("Kunde inte hämta aktiviteter från Strava.");
         console.log(err);
         return [];
     }
