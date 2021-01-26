@@ -157,6 +157,7 @@ getStravaStreams = async (accessToken, activityId) => {
                 Authorization: 'Bearer ' + accessToken
             }
         });
+/*
         console.log('################');
         console.log(response.data);
         console.log('################');
@@ -230,94 +231,6 @@ getStravaStreams = async (accessToken, activityId) => {
             console.log(response.data.time.original_size);
             console.log('**************');
         }
-/*
-        let response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/latlng', {
-            headers: {
-                Authorization: 'Bearer ' + accessToken
-            }
-        });
-        console.log('*******latlng*******');
-        response.data.map(item => {
-            console.log(item.type + ': ' + item.data.length);
-            console.log(item.data[0]);
-        });
-        console.log('**************');
-        response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/heartrate', {
-            headers: {
-                Authorization: 'Bearer ' + accessToken
-            }
-        });
-        console.log('*******heartrate*******');
-        response.data.map(item => {
-            console.log(item.type + ': ' + item.data.length);
-            console.log(item.data[0]);
-        });
-        console.log('**************');
-        response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/altitude', {
-            headers: {
-                Authorization: 'Bearer ' + accessToken
-            }
-        });
-        console.log('*******altitude*******');
-        response.data.map(item => {
-            console.log(item.type + ': ' + item.data.length);
-            console.log(item.data[0]);
-        });
-        console.log('**************');
-        response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/velocity_smooth', {
-            headers: {
-                Authorization: 'Bearer ' + accessToken
-            }
-        });
-        console.log('*******velocity_smooth*******');
-        response.data.map(item => {
-            console.log(item.type + ': ' + item.data.length);
-            console.log(item.data[0]);
-        });
-        console.log('**************');
-        response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/cadence', {
-            headers: {
-                Authorization: 'Bearer ' + accessToken
-            }
-        });
-        console.log('*******cadence*******');
-        response.data.map(item => {
-            console.log(item.type + ': ' + item.data.length);
-            console.log(item.data[0]);
-        });
-        console.log('**************');
-        response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/watts', {
-            headers: {
-                Authorization: 'Bearer ' + accessToken
-            }
-        });
-        console.log('*******watt*******');
-        response.data.map(item => {
-            console.log(item.type + ': ' + item.data.length);
-            console.log(item.data[0]);
-        });
-        console.log('**************');
-        response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/temp', {
-            headers: {
-                Authorization: 'Bearer ' + accessToken
-            }
-        });
-        console.log('*******temp*******');
-        response.data.map(item => {
-            console.log(item.type + ': ' + item.data.length);
-            console.log(item.data[0]);
-        });
-        console.log('**************');
-        console.log();
-*/
-/*
-        let response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams', {
-            headers: {
-                Authorization: 'Bearer ' + accessToken
-            }
-        });
-        console.log(response.data);
-        console.log('**************');
 */
         return response.data;
     } catch(err) {
@@ -493,7 +406,8 @@ app.post('/api/v1/activities', async (req, res) => {
                 typePlanned: req.body.typePlanned,
                 movingTimePlanned: req.body.movingTimePlanned,
                 distancePlanned: req.body.distancePlanned,
-                namePlanned: req.body.namePlanned
+                namePlanned: req.body.namePlanned,
+                hasStravaActivity: false
             }
         );
         console.log(activity);
@@ -504,6 +418,7 @@ app.post('/api/v1/activities', async (req, res) => {
         res.status(400).send("Det gick inte att skapa en aktivitet");
     }
 });
+// Gör om denna till /api/v1/activities/:id
 app.patch('/api/v1/activities', async (req, res) => {
     try {
         const activity = {
@@ -756,95 +671,168 @@ app.post('/stravaWebhook', async (req, res) => {
             const activityId = req.body.object_id;
             const accessToken = await authorize(userStravaId);
             const result = await getStravaActivity(accessToken, activityId);
-            if (result !== null) {
-                const item = result;
-                const startTime = moment(item.start_date).format('HH:mm');
-
-                const startOfDay = moment(item.start_date).format('YYYY-MM-DD 00:00:00');
-                const endOfDay = moment(item.start_date).format('YYYY-MM-DD 23:59:59');
-                const dayActivities = await Activity.find({ userStravaId: userStravaId, startDate: {$gte: startOfDay, $lte: endOfDay } });
-                console.log("****** Found for day *******");
-                console.log(dayActivities);
-                let namePlanned = '';
-                let typePlanned = '';
-                let movingTimePlanned = 0;
-                let distancePlanned = 0;
-                if (dayActivities.length > 0) {
-                    if (dayActivities.length > 1) {
-                        let found = false;
-                        for (let i = 0; i < dayActivities.length; i++) {
-                            if (!found) {
-                                if (dayActivities[i].typePlanned === item.type) {
-                                    found = true;
-                                    namePlanned = dayActivities[i].namePlanned;
-                                    typePlanned = dayActivities[i].typePlanned;
-                                    movingTimePlanned = dayActivities[i].movingTimePlanned;
-                                    distancePlanned = dayActivities[i].distancePlanned;
-                                    await Activity.findByIdAndRemove(dayActivities[i]._id);
-                                }
+            if (result === null) {
+                res.status(200).send('EVENT_RECEIVED');
+            }
+            const item = result;
+            const startTime = moment(item.start_date).format('HH:mm');
+            const startOfDay = moment(item.start_date).format('YYYY-MM-DD 00:00:00');
+            const endOfDay = moment(item.start_date).format('YYYY-MM-DD 23:59:59');
+            const dayActivities = await Activity.find({ userStravaId: userStravaId, startDate: {$gte: startOfDay, $lte: endOfDay } });
+            let namePlanned = '';
+            let typePlanned = '';
+            let movingTimePlanned = 0;
+            let distancePlanned = 0;
+            if (dayActivities.length > 0) {
+                if (dayActivities.length > 1) {
+                    let found = false;
+                    for (let i = 0; i < dayActivities.length; i++) {
+                        if (!found) {
+                            if (dayActivities[i].typePlanned === item.type) {
+                                found = true;
+                                namePlanned = dayActivities[i].namePlanned;
+                                typePlanned = dayActivities[i].typePlanned;
+                                movingTimePlanned = dayActivities[i].movingTimePlanned;
+                                distancePlanned = dayActivities[i].distancePlanned;
+                                await Activity.findByIdAndRemove(dayActivities[i]._id);
                             }
                         }
-                        if (!found) {
-                            namePlanned = dayActivities[0].namePlanned;
-                            typePlanned = dayActivities[0].typePlanned;
-                            movingTimePlanned = dayActivities[0].movingTimePlanned;
-                            distancePlanned = dayActivities[0].distancePlanned;
-                            await Activity.findByIdAndRemove(dayActivities[0]._id);    
-                        }
-                    } else {
+                    }
+                    if (!found) {
                         namePlanned = dayActivities[0].namePlanned;
                         typePlanned = dayActivities[0].typePlanned;
                         movingTimePlanned = dayActivities[0].movingTimePlanned;
                         distancePlanned = dayActivities[0].distancePlanned;
-                        await Activity.findByIdAndRemove(dayActivities[0]._id);
+                        await Activity.findByIdAndRemove(dayActivities[0]._id);    
                     }
+                } else {
+                    namePlanned = dayActivities[0].namePlanned;
+                    typePlanned = dayActivities[0].typePlanned;
+                    movingTimePlanned = dayActivities[0].movingTimePlanned;
+                    distancePlanned = dayActivities[0].distancePlanned;
+                    await Activity.findByIdAndRemove(dayActivities[0]._id);
                 }
-                console.log("****** Found for day *******");
-                
-                const lsd = item.moving_time > 5400 ? 1 : 0;
-                const strength = item.type === 'WeightTraining' ? 1 : 0;
-                const alternative = item.type === 'Swim' || item.type === 'Ride' || item.type === 'VirtualRide' || item.type === 'Walk' || item.type === 'Workout' ? 1 : 0;
-                const activity = new Activity(
-                    {
-                        name: startTime + ' ' + item.name,
-                        distance: item.distance,
-                        movingTime: item.moving_time,
-                        totalElevationGain: item.total_elevation_gain,
-                        type: item.type,
-                        stravaId: item.id,
-                        startDate: new Date(item.start_date),
-//                        startDateLocal: new Date(item.start_date_local),
-                        startLat: item.start_latitude,
-                        startLong: item.start_longitude,
-                        mapPolyline: item.map.summary_polyline,
-                        averageSpeed: item.average_speed,
-                        maxSpeed: item.max_speed,
-                        averageCadence: item.average_cadence,
-                        maxCadence: item.max_cadense,
-                        averageHeartrate: item.average_heartrate,
-                        maxHeartRate: item.max_heartrate,
-                        elevationHighest: item.elev_high,
-                        elevationLowest: item.elev_low,
-                        user: userData._id,
-                        title: startTime,
-                        ol: 0,
-                        night: 0, // Natt-OL
-                        quality: 0,
-                        lsd: lsd, // Långpass,
-                        strength: strength,
-                        alternative: alternative,
-                        forest: 0,
-                        path: 0,
-                        userStravaId: userStravaId,
-                        namePlanned: namePlanned,
-                        typePlanned: typePlanned,
-                        movingTimePlanned: movingTimePlanned,
-                        distancePlanned: distancePlanned
-                    }
-                );
-//                console.log('Denna ska sparas: ' + activityId); 
-                await activity.save();
             }
+            const laps = await getStravaLaps(accessToken, activityId);
+            const streams = await getStravaStreams(accessToken, activityId);
+            let latlngValues = null;
+            if (response.data.latlng !== undefined) {
+                latlngValues = {
+                    data: streams.data.latlng.data,
+                    series_type: streams.data.latlng.series_type
+                }
+            }
+            let heartrateValues = null;
+            if (response.data.heartrate !== undefined) {
+                heartrateValues = {
+                    data: streams.data.heartrate.data,
+                    series_type: streams.data.heartrate.series_type
+                }
+            }
+            let altitudeValues = null;
+            if (response.data.altitude !== undefined) {
+                altitudeValues = {
+                    data: streams.data.altitude.data,
+                    series_type: streams.data.altitude.series_type
+                }
+            }
+            let velocitySmoothValues = null;
+            if (response.data.velocity_smooth !== undefined) {
+                velocitySmoothValues = {
+                    data: streams.data.velocity_smooth.data,
+                    series_type: streams.data.velocity_smooth.series_type
+                }
+            }
+            let cadenceValues = null;
+            if (response.data.cadence !== undefined) {
+                cadenceValues = {
+                    data: streams.data.cadence.data,
+                    series_type: streams.data.cadence.series_type
+                }
+            }
+            let wattsValues = null;
+            if (response.data.watts !== undefined) {
+                wattsValues = {
+                    data: streams.data.watts.data,
+                    series_type: streams.data.watts.series_type
+                }
+            }
+            let tempValues = null;
+            if (response.data.temp !== undefined) {
+                tempValues = {
+                    data: streams.data.temp.data,
+                    series_type: streams.data.temp.series_type
+                }
+            }
+            let distanceValues = null;
+            if (response.data.distance !== undefined) {
+                distanceValues = {
+                    data: streams.data.distance.data,
+                    series_type: streams.data.distance.series_type
+                }
+            }
+            let timeValues = null;
+            if (response.data.time !== undefined) {
+                timeValues = {
+                    data: streams.data.time.data,
+                    series_type: streams.data.time.series_type
+                }
+            }
+
+            const lsd = item.moving_time > 5400 ? 1 : 0;
+            const strength = item.type === 'WeightTraining' ? 1 : 0;
+            const alternative = item.type === 'Swim' || item.type === 'Ride' || item.type === 'VirtualRide' || item.type === 'Walk' || item.type === 'Workout' ? 1 : 0;
+            const activity = new Activity(
+                {
+                    name: startTime + ' ' + item.name,
+                    distance: item.distance,
+                    movingTime: item.moving_time,
+                    totalElevationGain: item.total_elevation_gain,
+                    type: item.type,
+                    stravaId: item.id,
+                    startDate: new Date(item.start_date),
+//                        startDateLocal: new Date(item.start_date_local),
+                    startLat: item.start_latitude,
+                    startLong: item.start_longitude,
+                    mapPolyline: item.map.summary_polyline,
+                    averageSpeed: item.average_speed,
+                    maxSpeed: item.max_speed,
+                    averageCadence: item.average_cadence,
+                    maxCadence: item.max_cadense,
+                    averageHeartrate: item.average_heartrate,
+                    maxHeartRate: item.max_heartrate,
+                    elevationHighest: item.elev_high,
+                    elevationLowest: item.elev_low,
+                    user: userData._id,
+                    title: startTime,
+                    ol: 0,
+                    night: 0, // Natt-OL
+                    quality: 0,
+                    lsd: lsd, // Långpass,
+                    strength: strength,
+                    alternative: alternative,
+                    forest: 0,
+                    path: 0,
+                    userStravaId: userStravaId,
+                    namePlanned: namePlanned,
+                    typePlanned: typePlanned,
+                    movingTimePlanned: movingTimePlanned,
+                    distancePlanned: distancePlanned,
+                    laps = laps,
+                    latlngValues: latlngValues,
+                    heartrateValues: heartrateValues,
+                    altitudeValues: altitudeValues,
+                    velocitySmoothValues: velocitySmoothValues,
+                    cadenceValues: cadenceValues,
+                    wattsValues: wattsValues,
+                    distanceValues: distanceValues,
+                    timeValues: timeValues,
+                    isStravaSynced: true,
+                    hasStravaActivity: true
+                 }
+            );
+//                console.log('Denna ska sparas: ' + activityId); 
+            await activity.save();
             res.status(200).send('EVENT_RECEIVED');
         } catch(err) {
             console.log("Det gick inte att skapa en aktivitet: " + err);
@@ -881,5 +869,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}!`);
+  console.log(`Trbokbackend app listening on port ${port}!`);
 });

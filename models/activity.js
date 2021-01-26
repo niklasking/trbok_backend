@@ -21,6 +21,56 @@ const LapSchema = new Schema(
         total_elevation_gain: Number
     }
 );
+const LatLngSchema = new Schema(
+    {
+        data: [
+            [Number]
+        ],
+        series_type: String
+    }
+);
+const HeartrateSchema = new Schema(
+    {
+        data: [Number],
+        series_type: String
+    }
+);
+const AltitudeSchema = new Schema(
+    {
+        data: [Number],
+        series_type: String
+    }
+);
+const VelocitySmoothSchema = new Schema(
+    {
+        data: [Number],
+        series_type: String
+    }
+);
+const CadenceSchema = new Schema(
+    {
+        data: [Number],
+        series_type: String
+    }
+);
+const WattsSchema = new Schema(
+    {
+        data: [Number],
+        series_type: String
+    }
+);
+const DistanceSchema = new Schema(
+    {
+        data: [Number],
+        series_type: String
+    }
+);
+const TimeSchema = new Schema(
+    {
+        data: [Number],
+        series_type: String
+    }
+);
 
 const ActivitySchema = new Schema(    
     {
@@ -62,7 +112,17 @@ const ActivitySchema = new Schema(
         movingTimePlanned: Number,
         distancePlanned: Number,
         namePlanned: String,
-        laps: [ LapSchema ]
+        laps: [ LapSchema ],
+        latlngValues: [ LatLngSchema ],
+        heartrateValues: [ HeartrateSchema ],
+        altitudeValues: [ AltitudeSchema ],
+        velocitySmoothValues: [ VelocitySmoothSchema ],
+        cadenceValues: [ CadenceSchema ],
+        wattsValues: [ WattsSchema ],
+        distanceValues: [ DistanceSchema ],
+        timeValues: [ TimeSchema ],
+        isStravaSynced: Boolean,
+        hasStravaActivity: Boolean
 },
     { collection: 'activity' }
 );
