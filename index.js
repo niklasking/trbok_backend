@@ -833,6 +833,7 @@ app.post('/stravaWebhook', async (req, res) => {
             );
 //                console.log('Denna ska sparas: ' + activityId); 
             await activity.save();
+            console.log(activity);
             res.status(200).send('EVENT_RECEIVED');
         } catch(err) {
             console.log("Det gick inte att skapa en aktivitet: " + err);
