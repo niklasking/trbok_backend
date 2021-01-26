@@ -152,7 +152,7 @@ getStravaLaps = async (accessToken, activityId) => {
 getStravaStreams = async (accessToken, activityId) => {
     try {
         let response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams' +
-                                    '?keys=latlng,heartrate,altitude,velocity_smooth,cadence,watts&key_by_type=true', {
+                                    '?keys=latlng,heartrate,altitude,velocity_smooth,cadence,watts,temp,distance,time&key_by_type=true', {
             headers: {
                 Authorization: 'Bearer ' + accessToken
             }
@@ -160,11 +160,57 @@ getStravaStreams = async (accessToken, activityId) => {
         console.log('################');
         console.log(response.data);
         console.log('################');
+        console.log('*******latlng*******');
+        console.log(response.data.latlng.data.length);
+        console.log(response.data.latlng.data[0]);
+        console.log(response.data.latlng.series_type);
+        console.log(response.data.latlng.original_size);
         console.log('**************');
-        response.data.map(item => {
-            console.log(item.type + ': ' + item.data.length);
-            console.log(item.data[0]);
-        });
+        console.log('*******heartrate*******');
+        console.log(response.data.heartrate.data.length);
+        console.log(response.data.heartrate.data[0]);
+        console.log(response.data.heartrate.series_type);
+        console.log(response.data.heartrate.original_size);
+        console.log('**************');
+        console.log('*******altitude*******');
+        console.log(response.data.altitude.data.length);
+        console.log(response.data.altitude.data[0]);
+        console.log(response.data.altitude.series_type);
+        console.log(response.data.altitude.original_size);
+        console.log('**************');
+        console.log('*******velocity_smooth*******');
+        console.log(response.data.velocity_smooth.data.length);
+        console.log(response.data.velocity_smooth.data[0]);
+        console.log(response.data.velocity_smooth.series_type);
+        console.log(response.data.velocity_smooth.original_size);
+        console.log('**************');
+        console.log('*******cadence*******');
+        console.log(response.data.cadence.data.length);
+        console.log(response.data.cadence.data[0]);
+        console.log(response.data.cadence.series_type);
+        console.log(response.data.cadence.original_size);
+        console.log('**************');
+        console.log('*******watts*******');
+        console.log(response.data.watts.data.length);
+        console.log(response.data.watts.data[0]);
+        console.log(response.data.watts.series_type);
+        console.log(response.data.watts.original_size);
+        console.log('**************');
+        console.log('*******temp*******');
+        console.log(response.data.temp.data.length);
+        console.log(response.data.temp.data[0]);
+        console.log(response.data.temp.series_type);
+        console.log(response.data.temp.original_size);
+        console.log('**************');
+        console.log('*******distance*******');
+        console.log(response.data.distance.data.length);
+        console.log(response.data.distance.data[0]);
+        console.log(response.data.distance.original_size);
+        console.log('**************');
+        console.log('*******time*******');
+        console.log(response.data.time.data.length);
+        console.log(response.data.time.data[0]);
+        console.log(response.data.time.original_size);
         console.log('**************');
 /*
         let response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/latlng', {
