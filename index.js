@@ -825,6 +825,7 @@ app.post('/stravaWebhook', async (req, res) => {
                     velocitySmoothValues: velocitySmoothValues,
                     cadenceValues: cadenceValues,
                     wattsValues: wattsValues,
+                    tempValues: tempValues,
                     distanceValues: distanceValues,
                     timeValues: timeValues,
                     isStravaSynced: true,
