@@ -818,7 +818,7 @@ app.post('/stravaWebhook', async (req, res) => {
                     typePlanned: typePlanned,
                     movingTimePlanned: movingTimePlanned,
                     distancePlanned: distancePlanned,
-                    laps = laps,
+                    laps: laps,
                     latlngValues: latlngValues,
                     heartrateValues: heartrateValues,
                     altitudeValues: altitudeValues,
