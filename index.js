@@ -716,63 +716,63 @@ app.post('/stravaWebhook', async (req, res) => {
             const laps = await getStravaLaps(accessToken, activityId);
             const streams = await getStravaStreams(accessToken, activityId);
             let latlngValues = null;
-            if (response.data.latlng !== undefined) {
+            if (streams.data.latlng !== undefined) {
                 latlngValues = {
                     data: streams.data.latlng.data,
                     series_type: streams.data.latlng.series_type
                 }
             }
             let heartrateValues = null;
-            if (response.data.heartrate !== undefined) {
+            if (streams.data.heartrate !== undefined) {
                 heartrateValues = {
                     data: streams.data.heartrate.data,
                     series_type: streams.data.heartrate.series_type
                 }
             }
             let altitudeValues = null;
-            if (response.data.altitude !== undefined) {
+            if (streams.data.altitude !== undefined) {
                 altitudeValues = {
                     data: streams.data.altitude.data,
                     series_type: streams.data.altitude.series_type
                 }
             }
             let velocitySmoothValues = null;
-            if (response.data.velocity_smooth !== undefined) {
+            if (streams.data.velocity_smooth !== undefined) {
                 velocitySmoothValues = {
                     data: streams.data.velocity_smooth.data,
                     series_type: streams.data.velocity_smooth.series_type
                 }
             }
             let cadenceValues = null;
-            if (response.data.cadence !== undefined) {
+            if (streams.data.cadence !== undefined) {
                 cadenceValues = {
                     data: streams.data.cadence.data,
                     series_type: streams.data.cadence.series_type
                 }
             }
             let wattsValues = null;
-            if (response.data.watts !== undefined) {
+            if (streams.data.watts !== undefined) {
                 wattsValues = {
                     data: streams.data.watts.data,
                     series_type: streams.data.watts.series_type
                 }
             }
             let tempValues = null;
-            if (response.data.temp !== undefined) {
+            if (streams.data.temp !== undefined) {
                 tempValues = {
                     data: streams.data.temp.data,
                     series_type: streams.data.temp.series_type
                 }
             }
             let distanceValues = null;
-            if (response.data.distance !== undefined) {
+            if (streams.data.distance !== undefined) {
                 distanceValues = {
                     data: streams.data.distance.data,
                     series_type: streams.data.distance.series_type
                 }
             }
             let timeValues = null;
-            if (response.data.time !== undefined) {
+            if (streams.data.time !== undefined) {
                 timeValues = {
                     data: streams.data.time.data,
                     series_type: streams.data.time.series_type
