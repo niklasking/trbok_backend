@@ -151,7 +151,19 @@ getStravaLaps = async (accessToken, activityId) => {
 };
 getStravaStreams = async (accessToken, activityId) => {
     try {
-
+        let response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams' +
+                                    'keys=latlng,heartrate,altitude,velocity_smooth,cadence,watts&key_by_type=true', {
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            }
+        });
+        console.log('**************');
+        response.data.map(item => {
+            console.log(item.type + ': ' + item.data.length);
+            console.log(item.data[0]);
+        });
+        console.log('**************');
+/*
         let response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/latlng', {
             headers: {
                 Authorization: 'Bearer ' + accessToken
@@ -230,14 +242,6 @@ getStravaStreams = async (accessToken, activityId) => {
         });
         console.log('**************');
         console.log();
-/*
-        response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams/moving', {
-            headers: {
-                Authorization: 'Bearer ' + accessToken
-            }
-        });
-        console.log(response.data);
-        console.log('**************');
 */
 /*
         let response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams', {
