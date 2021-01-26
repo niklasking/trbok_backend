@@ -716,66 +716,66 @@ app.post('/stravaWebhook', async (req, res) => {
             const laps = await getStravaLaps(accessToken, activityId);
             const streams = await getStravaStreams(accessToken, activityId);
             let latlngValues = null;
-            if (streams.data.latlng !== undefined) {
+            if (streams.latlng !== undefined) {
                 latlngValues = {
-                    data: streams.data.latlng.data,
-                    series_type: streams.data.latlng.series_type
+                    data: streams.latlng.data,
+                    series_type: streams.latlng.series_type
                 }
             }
             let heartrateValues = null;
-            if (streams.data.heartrate !== undefined) {
+            if (streams.heartrate !== undefined) {
                 heartrateValues = {
-                    data: streams.data.heartrate.data,
-                    series_type: streams.data.heartrate.series_type
+                    data: streams.heartrate.data,
+                    series_type: streams.heartrate.series_type
                 }
             }
             let altitudeValues = null;
-            if (streams.data.altitude !== undefined) {
+            if (streams.altitude !== undefined) {
                 altitudeValues = {
-                    data: streams.data.altitude.data,
-                    series_type: streams.data.altitude.series_type
+                    data: streams.altitude.data,
+                    series_type: streams.altitude.series_type
                 }
             }
             let velocitySmoothValues = null;
-            if (streams.data.velocity_smooth !== undefined) {
+            if (streams.velocity_smooth !== undefined) {
                 velocitySmoothValues = {
-                    data: streams.data.velocity_smooth.data,
-                    series_type: streams.data.velocity_smooth.series_type
+                    data: streams.velocity_smooth.data,
+                    series_type: streams.velocity_smooth.series_type
                 }
             }
             let cadenceValues = null;
-            if (streams.data.cadence !== undefined) {
+            if (streams.cadence !== undefined) {
                 cadenceValues = {
-                    data: streams.data.cadence.data,
-                    series_type: streams.data.cadence.series_type
+                    data: streams.cadence.data,
+                    series_type: streams.cadence.series_type
                 }
             }
             let wattsValues = null;
-            if (streams.data.watts !== undefined) {
+            if (streams.watts !== undefined) {
                 wattsValues = {
-                    data: streams.data.watts.data,
-                    series_type: streams.data.watts.series_type
+                    data: streams.watts.data,
+                    series_type: streams.watts.series_type
                 }
             }
             let tempValues = null;
-            if (streams.data.temp !== undefined) {
+            if (streams.temp !== undefined) {
                 tempValues = {
-                    data: streams.data.temp.data,
-                    series_type: streams.data.temp.series_type
+                    data: streams.temp.data,
+                    series_type: streams.temp.series_type
                 }
             }
             let distanceValues = null;
-            if (streams.data.distance !== undefined) {
+            if (streams.distance !== undefined) {
                 distanceValues = {
-                    data: streams.data.distance.data,
-                    series_type: streams.data.distance.series_type
+                    data: streams.distance.data,
+                    series_type: streams.distance.series_type
                 }
             }
             let timeValues = null;
-            if (streams.data.time !== undefined) {
+            if (streams.time !== undefined) {
                 timeValues = {
-                    data: streams.data.time.data,
-                    series_type: streams.data.time.series_type
+                    data: streams.time.data,
+                    series_type: streams.time.series_type
                 }
             }
 
