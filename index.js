@@ -613,10 +613,11 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                 }
             }
             let heartrateValues = null;
+            let values = [];
             if (streams.heartrate !== undefined) {
                 if (streams.heartrate.series_type === 'distance') {
                     for (let j = 0; j < streams.heartrate.data.length; j++) {
-                        streams.heartrate.data[j] = [ streams.heartrate.data[j],streams.distance.data[j] ];
+                        values = { y: streams.heartrate.data[j], x: streams.distance.data[j] };
                     }
                     heartrateValues = {
                         data: streams.heartrate.data,
@@ -624,7 +625,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     }    
                 } else if (streams.heartrate.series_type === 'time') {
                     for (let j = 0; j < streams.heartrate.data.length; j++) {
-                        streams.heartrate.data[j] = [ streams.heartrate.data[j], streams.time.data[j] ];
+                        values = { y: streams.heartrate.data[j], x: streams.time.data[j] };
                     }
                     heartrateValues = {
                         data: streams.heartrate.data,
