@@ -607,29 +607,29 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
             const streams = await getStravaStreams(accessToken, result[i].id);
             let latlngValues = null;
             if (streams.latlng !== undefined) {
-                if (streams.latlng.series_type === 'distance') {
-                    for (let j = 0; j < streams.latlng.data.length; j++) {
-                        streams.latlng.data[j] = [ streams.latlng.data[j],streams.distance.data[j] ];
-                    }
-                    latlngValues = {
-                        data: streams.latlng.data,
-                        series_type: streams.latlng.series_type
-                    }    
-                } else if (streams.latlng.series_type === 'time') {
-                    for (let j = 0; j < streams.latlng.data.length; j++) {
-                        streams.latlng.data[j] = [ streams.latlng.data[j], streams.time.data[j] ];
-                    }
-                    latlngValues = {
-                        data: streams.latlng.data,
-                        series_type: streams.latlng.series_type
-                    }    
+                latlngValues = {
+                    data: streams.latlng.data,
+                    series_type: streams.latlng.series_type
                 }
             }
             let heartrateValues = null;
             if (streams.heartrate !== undefined) {
-                heartrateValues = {
-                    data: streams.heartrate.data,
-                    series_type: streams.heartrate.series_type
+                if (streams.heartrate.series_type === 'distance') {
+                    for (let j = 0; j < streams.heartrate.data.length; j++) {
+                        streams.heartrate.data[j] = [ streams.heartrate.data[j],streams.distance.data[j] ];
+                    }
+                    heartrateValues = {
+                        data: streams.heartrate.data,
+                        series_type: streams.heartrate.series_type
+                    }    
+                } else if (streams.heartrate.series_type === 'time') {
+                    for (let j = 0; j < streams.heartrate.data.length; j++) {
+                        streams.heartrate.data[j] = [ streams.heartrate.data[j], streams.time.data[j] ];
+                    }
+                    heartrateValues = {
+                        data: streams.heartrate.data,
+                        series_type: streams.heartrate.series_type
+                    }    
                 }
             }
             let altitudeValues = null;
