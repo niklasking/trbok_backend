@@ -607,9 +607,22 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
             const streams = await getStravaStreams(accessToken, result[i].id);
             let latlngValues = null;
             if (streams.latlng !== undefined) {
-                latlngValues = {
-                    data: streams.latlng.data,
-                    series_type: streams.latlng.series_type
+                if (streams.latlng.series_type === 'distance') {
+                    for (let j = 0; j < streams.latlng.data.length; j++) {
+                        streams.latlng.data[j] = [ streams.distance.data[j] ];
+                    }
+                    latlngValues = {
+                        data: streams.latlng.data,
+                        series_type: streams.latlng.series_type
+                    }    
+                } else if (streams.latlng.series_type === 'time') {
+                    for (let j = 0; j < streams.latlng.data.length; j++) {
+                        streams.latlng.data[j] = [ streams.time.data[j] ];
+                    }
+                    latlngValues = {
+                        data: streams.latlng.data,
+                        series_type: streams.latlng.series_type
+                    }    
                 }
             }
             let heartrateValues = null;
@@ -722,7 +735,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     isStravaStreamsSynced: true
             });
             const doc = await activity.save();
-//            console.log(doc);
+            console.log(doc);
         };
         res.status(200).send('Ok');
     }
