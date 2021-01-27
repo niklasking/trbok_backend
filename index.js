@@ -602,7 +602,10 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
         let result = await getAdditionalBetweenStravaActivities(accessToken, before, after);
         for (let i = 0; i < result.length; i++) {
             // Get laps
-            const laps = await getStravaLaps(accessToken, result[i].id);
+            let laps = await getStravaLaps(accessToken, result[i].id);
+            if (laps === undefined) {
+                laps = [];
+            }
             // Get streams
             const streams = await getStravaStreams(accessToken, result[i].id);
             let latlngValues = null;
