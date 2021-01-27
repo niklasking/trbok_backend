@@ -620,7 +620,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         values = { y: streams.heartrate.data[j], x: streams.distance.data[j] };
                     }
                     heartrateValues = {
-                        data: streams.heartrate.data,
+                        data: values,
                         series_type: streams.heartrate.series_type
                     }    
                 } else if (streams.heartrate.series_type === 'time') {
@@ -628,7 +628,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         values = { y: streams.heartrate.data[j], x: streams.time.data[j] };
                     }
                     heartrateValues = {
-                        data: streams.heartrate.data,
+                        data: values,
                         series_type: streams.heartrate.series_type
                     }    
                 }
