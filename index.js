@@ -616,6 +616,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
             let values = [];
             if (streams.heartrate !== undefined) {
                 if (streams.heartrate.series_type === 'distance') {
+                    console.log(streams.heartrate.data.length);
                     for (let j = 0; j < streams.heartrate.data.length; j++) {
                         values.push({ x: streams.distance.data[j], y: streams.heartrate.data[j] });
                     }
