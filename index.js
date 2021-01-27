@@ -407,8 +407,10 @@ app.post('/api/v1/activities', async (req, res) => {
                 movingTimePlanned: req.body.movingTimePlanned,
                 distancePlanned: req.body.distancePlanned,
                 namePlanned: req.body.namePlanned,
-                hasStravaActivity: false
-            }
+                isStravaSynced: false,
+                hasStravaActivity: false,
+                isStravaStreamsSynced: false
+        }
         );
         console.log(activity);
         const result = await activity.save();
@@ -497,7 +499,10 @@ app.get('/api/v1/strava/activities', (req, res) => {
                         strength: strength,
                         alternative: alternative,
                         forest: 0,
-                        path: 0
+                        path: 0,
+                        isStravaSynced: true,
+                        hasStravaActivity: true,
+                        isStravaStreamsSynced: false
                     }
                 );
                 activity.save();
@@ -578,6 +583,9 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
     const userStravaId = req.query.stravaId;
     try {
         const accessToken = await authorize(userStravaId);
+
+
+        
         let result = await getAdditionalBetweenStravaActivities(accessToken, before, after);
         for (let i = 0; i < result.length; i++) {
             // Get laps
