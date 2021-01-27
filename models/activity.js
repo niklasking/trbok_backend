@@ -31,7 +31,7 @@ const LatLngSchema = new Schema(
 );
 const HeartrateSchema = new Schema(
     {
-        data: [Number],
+        data: [ [Number] ],
         series_type: String
     }
 );
