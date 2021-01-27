@@ -387,6 +387,15 @@ app.get('/api/v1/activities', async (req, res) => {
         res.status(400).send("Hittade inga aktiviteter");
     }
 });
+app.get('/api/v1/activities/:id', async (req, res) => {
+    try {
+        const result = await Activity.find({ _id: req.params.id });
+        res.status(200).send(result);
+    } catch(err) {
+//        console.log('Find error: ' + err);
+        res.status(400).send("Hittade inga aktiviteter");
+    }
+});
 app.post('/api/v1/activities', async (req, res) => {
     try {
         const activity = new Activity(
