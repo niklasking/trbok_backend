@@ -702,6 +702,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
         res.status(200).send('Ok');
     }
     catch(err) {
+        console.log(err);
         res.status(400).json({ success: false, message: err });
     }
 });
