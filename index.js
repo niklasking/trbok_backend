@@ -389,7 +389,7 @@ app.get('/api/v1/activities', async (req, res) => {
 });
 app.get('/api/v1/activities/:id', async (req, res) => {
     try {
-        const result = await Activity.find({ _id: req.params.id });
+        const result = await Activity.findById(req.params.id);
         res.status(200).send(result);
     } catch(err) {
 //        console.log('Find error: ' + err);
