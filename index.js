@@ -609,7 +609,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
             if (streams.latlng !== undefined) {
                 if (streams.latlng.series_type === 'distance') {
                     for (let j = 0; j < streams.latlng.data.length; j++) {
-                        streams.latlng.data[j] = [ streams.distance.data[j] ];
+                        streams.latlng.data[j] = [ streams.latlng.data[j],streams.distance.data[j] ];
                     }
                     latlngValues = {
                         data: streams.latlng.data,
@@ -617,7 +617,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     }    
                 } else if (streams.latlng.series_type === 'time') {
                     for (let j = 0; j < streams.latlng.data.length; j++) {
-                        streams.latlng.data[j] = [ streams.time.data[j] ];
+                        streams.latlng.data[j] = [ streams.latlng.data[j], streams.time.data[j] ];
                     }
                     latlngValues = {
                         data: streams.latlng.data,
