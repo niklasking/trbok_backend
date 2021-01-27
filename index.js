@@ -506,7 +506,6 @@ app.get('/api/v1/strava/activities', (req, res) => {
                 res.status(400).json({ success: false, message: err.message });
             }        
         })
-        // ******** UPPDATERA MED HTTPS **********
         res.redirect('https://trbok.niklasking.com');
     })
     .catch( err => res.send([]));
@@ -579,9 +578,74 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
         let result = await getAdditionalBetweenStravaActivities(accessToken, before, after);
         for (let i = 0; i < result.length; i++) {
             // Get laps
-            const laps = await getStravaLaps(accessToken, result[i].id);
+            const laps = await getStravaLaps(accessToken, activityId);
             // Get streams
-            await getStravaStreams(accessToken, result[i].id);
+            const streams = await getStravaStreams(accessToken, activityId);
+            let latlngValues = null;
+            if (streams.latlng !== undefined) {
+                latlngValues = {
+                    data: streams.latlng.data,
+                    series_type: streams.latlng.series_type
+                }
+            }
+            let heartrateValues = null;
+            if (streams.heartrate !== undefined) {
+                heartrateValues = {
+                    data: streams.heartrate.data,
+                    series_type: streams.heartrate.series_type
+                }
+            }
+            let altitudeValues = null;
+            if (streams.altitude !== undefined) {
+                altitudeValues = {
+                    data: streams.altitude.data,
+                    series_type: streams.altitude.series_type
+                }
+            }
+            let velocitySmoothValues = null;
+            if (streams.velocity_smooth !== undefined) {
+                velocitySmoothValues = {
+                    data: streams.velocity_smooth.data,
+                    series_type: streams.velocity_smooth.series_type
+                }
+            }
+            let cadenceValues = null;
+            if (streams.cadence !== undefined) {
+                cadenceValues = {
+                    data: streams.cadence.data,
+                    series_type: streams.cadence.series_type
+                }
+            }
+            let wattsValues = null;
+            if (streams.watts !== undefined) {
+                wattsValues = {
+                    data: streams.watts.data,
+                    series_type: streams.watts.series_type
+                }
+            }
+            let tempValues = null;
+            if (streams.temp !== undefined) {
+                tempValues = {
+                    data: streams.temp.data,
+                    series_type: streams.temp.series_type
+                }
+            }
+            let distanceValues = null;
+            if (streams.distance !== undefined) {
+                distanceValues = {
+                    data: streams.distance.data,
+                    series_type: streams.distance.series_type
+                }
+            }
+            let timeValues = null;
+            if (streams.time !== undefined) {
+                timeValues = {
+                    data: streams.time.data,
+                    series_type: streams.time.series_type
+                }
+            }
+
+
             // Save activity
             const startTime = moment(result[i].start_date).format('HH:mm');
             const lsd = result[i].moving_time > 5400 ? 1 : 0;
@@ -596,7 +660,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     type: result[i].type,
                     stravaId: result[i].id,
                     startDate: new Date(result[i].start_date),
-//                        startDateLocal: new Date(item.start_date_local),
+                    startDateLocal: new Date(item.start_date_local),
                     startLat: result[i].start_latitude,
                     startLong: result[i].start_longitude,
                     mapPolyline: result[i].map.summary_polyline,
@@ -619,7 +683,18 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     alternative: alternative,
                     forest: 0,
                     path: 0,
-                    laps: laps
+                    laps: laps,
+                    latlngValues: latlngValues,
+                    heartrateValues: heartrateValues,
+                    altitudeValues: altitudeValues,
+                    velocitySmoothValues: velocitySmoothValues,
+                    cadenceValues: cadenceValues,
+                    wattsValues: wattsValues,
+                    tempValues: tempValues,
+                    distanceValues: distanceValues,
+                    timeValues: timeValues,
+                    isStravaSynced: true,
+                    hasStravaActivity: true
             });
             const doc = await activity.save();
 //            console.log(doc);
@@ -791,7 +866,7 @@ app.post('/stravaWebhook', async (req, res) => {
                     type: item.type,
                     stravaId: item.id,
                     startDate: new Date(item.start_date),
-//                        startDateLocal: new Date(item.start_date_local),
+                    startDateLocal: new Date(item.start_date_local),
                     startLat: item.start_latitude,
                     startLong: item.start_longitude,
                     mapPolyline: item.map.summary_polyline,

@@ -81,7 +81,7 @@ const ActivitySchema = new Schema(
         type: String,
         stravaId: Number,
         startDate: Date,
-//        startDateLocal: Date,
+        startDateLocal: Date,
         startLat: Number,
         startLong: Number,
         mapPolyline: String,
