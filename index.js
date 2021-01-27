@@ -375,8 +375,12 @@ app.get('/api/v1/activities', async (req, res) => {
 //        console.log('Saving... ' + req.query.user);
         const dateStart = req.query.dateStart;
         const dateEnd = req.query.dateEnd;
-        const result = await Activity.find({ user: req.query.user, startDate: {$gte: dateStart, $lte: dateEnd } }).sort({startDate: 1});
-//        console.log('Find success: ' + result);
+        const result = await Activity.find(
+            { user: req.query.user, startDate: {$gte: dateStart, $lte: dateEnd }, },
+            { laps: 0, latlngValues: 0, heartrateValues: 0, altitudeValues: 0,
+              velocitySmoothValues: 0, cadenceValues: 0, wattsValues: 0,
+              tempValues: 0, distanceValues: 0, timeValues: 0 }).sort({startDate: 1});
+
         res.status(200).send(result);
     } catch(err) {
 //        console.log('Find error: ' + err);
