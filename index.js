@@ -660,7 +660,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     type: result[i].type,
                     stravaId: result[i].id,
                     startDate: new Date(result[i].start_date),
-                    startDateLocal: new Date(item.start_date_local),
+                    startDateLocal: new Date(result[i].start_date_local),
                     startLat: result[i].start_latitude,
                     startLong: result[i].start_longitude,
                     mapPolyline: result[i].map.summary_polyline,
