@@ -122,7 +122,8 @@ const ActivitySchema = new Schema(
         distanceValues: [ DistanceSchema ],
         timeValues: [ TimeSchema ],
         isStravaSynced: Boolean,
-        hasStravaActivity: Boolean
+        hasStravaActivity: Boolean,
+        isStravaStreamsSynced: Boolean
 },
     { collection: 'activity' }
 );

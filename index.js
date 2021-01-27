@@ -532,7 +532,7 @@ app.get('/api/v1/strava/activities/before', (req, res) => {
                         type: item.type,
                         stravaId: item.id,
                         startDate: new Date(item.start_date),
-//                        startDateLocal: new Date(item.start_date_local),
+                        startDateLocal: new Date(item.start_date_local),
                         startLat: item.start_latitude,
                         startLong: item.start_longitude,
                         mapPolyline: item.map.summary_polyline,
@@ -554,7 +554,10 @@ app.get('/api/v1/strava/activities/before', (req, res) => {
                         strength: strength,
                         alternative: alternative,
                         forest: 0,
-                        path: 0
+                        path: 0,
+                        isStravaSynced: true,
+                        hasStravaActivity: true,
+                        isStravaStreamsSynced: false
                     }
                 );
                 activity.save();
@@ -694,7 +697,8 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     distanceValues: distanceValues,
                     timeValues: timeValues,
                     isStravaSynced: true,
-                    hasStravaActivity: true
+                    hasStravaActivity: true,
+                    isStravaStreamsSynced: true
             });
             const doc = await activity.save();
 //            console.log(doc);
@@ -905,7 +909,8 @@ app.post('/stravaWebhook', async (req, res) => {
                     distanceValues: distanceValues,
                     timeValues: timeValues,
                     isStravaSynced: true,
-                    hasStravaActivity: true
+                    hasStravaActivity: true,
+                    isStravaStreamsSynced: true
                  }
             );
 //                console.log('Denna ska sparas: ' + activityId); 
