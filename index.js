@@ -638,6 +638,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     }    
                 }
             }
+            console.log(heartrateValues);
             let altitudeValues = null;
             if (streams.altitude !== undefined) {
                 altitudeValues = {
