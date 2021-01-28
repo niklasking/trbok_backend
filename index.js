@@ -619,11 +619,9 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
             let values = [];
             if (streams.heartrate !== undefined) {
                 if (streams.heartrate.series_type === 'distance') {
-                    console.log(streams.heartrate.data.length);
                     for (let j = 0; j < streams.heartrate.data.length; j++) {
                         values.push({ x: streams.distance.data[j], y: streams.heartrate.data[j] });
                     }
-                    console.log(values);
                     heartrateValues = {
                         data: values,
                         series_type: streams.heartrate.series_type
@@ -638,56 +636,113 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     }    
                 }
             }
-            console.log(heartrateValues);
             let altitudeValues = null;
+            values = [];
             if (streams.altitude !== undefined) {
-                altitudeValues = {
-                    data: streams.altitude.data,
-                    series_type: streams.altitude.series_type
+                if (streams.altitude.series_type === 'distance') {
+                    for (let j = 0; j < streams.altitude.data.length; j++) {
+                        values.push({ x: streams.distance.data[j], y: streams.altitude.data[j] });
+                    }
+                    altitudeValues = {
+                        data: values,
+                        series_type: streams.altitude.series_type
+                    }    
+                } else if (streams.altitude.series_type === 'time') {
+                    for (let j = 0; j < streams.altitude.data.length; j++) {
+                        values.push({ x: streams.time.data[j], y: streams.altitude.data[j] });
+                    }
+                    altitudeValues = {
+                        data: values,
+                        series_type: streams.altitude.series_type
+                    }    
                 }
             }
             let velocitySmoothValues = null;
+            values = [];
             if (streams.velocity_smooth !== undefined) {
-                velocitySmoothValues = {
-                    data: streams.velocity_smooth.data,
-                    series_type: streams.velocity_smooth.series_type
+                if (streams.velocity_smooth.series_type === 'distance') {
+                    for (let j = 0; j < streams.velocity_smooth.data.length; j++) {
+                    values.push({ x: streams.distance.data[j], y: streams.velocity_smooth.data[j] });
+                    }
+                    velocitySmoothValues = {
+                        data: values,
+                        series_type: streams.velocity_smooth.series_type
+                    }    
+                } else if (streams.velocity_smooth.series_type === 'time') {
+                    for (let j = 0; j < streams.velocity_smooth.data.length; j++) {
+                        values.push({ x: streams.time.data[j], y: streams.velocity_smooth.data[j] });
+                    }
+                    velocitySmoothValues = {
+                        data: values,
+                        series_type: streams.velocity_smooth.series_type
+                    }
                 }
             }
             let cadenceValues = null;
+            values = [];
             if (streams.cadence !== undefined) {
-                cadenceValues = {
-                    data: streams.cadence.data,
-                    series_type: streams.cadence.series_type
+                if (streams.cadence.series_type === 'distance') {
+                    for (let j = 0; j < streams.cadence.data.length; j++) {
+                        values.push({ x: streams.distance.data[j], y: streams.cadence.data[j] });
+                    }
+                    cadenceValues = {
+                        data: values,
+                        series_type: streams.cadence.series_type
+                    }    
+                } else if (streams.cadence.series_type === 'time') {
+                    for (let j = 0; j < streams.cadence.data.length; j++) {
+                        values.push({ x: streams.time.data[j], y: streams.cadence.data[j] });
+                    }
+                    cadenceValues = {
+                        data: values,
+                        series_type: streams.cadence.series_type
+                    }    
                 }
             }
             let wattsValues = null;
+            values = [];
             if (streams.watts !== undefined) {
-                wattsValues = {
-                    data: streams.watts.data,
-                    series_type: streams.watts.series_type
+                if (streams.watts.series_type === 'distance') {
+                    for (let j = 0; j < streams.watts.data.length; j++) {
+                        values.push({ x: streams.distance.data[j], y: streams.watts.data[j] });
+                    }
+                    wattsValues = {
+                        data: values,
+                        series_type: streams.watts.series_type
+                    }    
+                } else if (streams.watts.series_type === 'time') {
+                    for (let j = 0; j < streams.watts.data.length; j++) {
+                        values.push({ x: streams.time.data[j], y: streams.watts.data[j] });
+                    }
+                    wattsValues = {
+                        data: values,
+                        series_type: streams.watts.series_type
+                    }    
                 }
             }
             let tempValues = null;
+            values = [];
             if (streams.temp !== undefined) {
-                tempValues = {
-                    data: streams.temp.data,
-                    series_type: streams.temp.series_type
+                if (streams.temp.series_type === 'distance') {
+                    for (let j = 0; j < streams.temp.data.length; j++) {
+                        values.push({ x: streams.distance.data[j], y: streams.temp.data[j] });
+                    }
+                    tempValues = {
+                        data: values,
+                        series_type: streams.temp.series_type
+                    }    
+                } else if (streams.temp.series_type === 'time') {
+                    for (let j = 0; j < streams.temp.data.length; j++) {
+                        values.push({ x: streams.time.data[j], y: streams.temp.data[j] });
+                    }
+                    tempValues = {
+                        data: values,
+                        series_type: streams.temp.series_type
+                    }    
                 }
             }
             let distanceValues = null;
-            if (streams.distance !== undefined) {
-                distanceValues = {
-                    data: streams.distance.data,
-                    series_type: streams.distance.series_type
-                }
-            }
             let timeValues = null;
-            if (streams.time !== undefined) {
-                timeValues = {
-                    data: streams.time.data,
-                    series_type: streams.time.series_type
-                }
-            }
 
 
             // Save activity
