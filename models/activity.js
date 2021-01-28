@@ -37,25 +37,25 @@ const HeartrateSchema = new Schema(
 );
 const AltitudeSchema = new Schema(
     {
-        data: [Number],
+        data: [{ x: Number, y: Number }],
         series_type: String
     }
 );
 const VelocitySmoothSchema = new Schema(
     {
-        data: [Number],
+        data: [{ x: Number, y: Number }],
         series_type: String
     }
 );
 const CadenceSchema = new Schema(
     {
-        data: [Number],
+        data: [{ x: Number, y: Number }],
         series_type: String
     }
 );
 const WattsSchema = new Schema(
     {
-        data: [Number],
+        data: [{ x: Number, y: Number }],
         series_type: String
     }
 );
