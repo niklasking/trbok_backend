@@ -924,8 +924,8 @@ app.post('/stravaWebhook', async (req, res) => {
                         series_type: streams.heartrate.series_type
                     }    
                 }
-            }
 */
+            }
             let altitudeValues = null;
             values = [];
             if (streams.altitude !== undefined) {
