@@ -906,7 +906,7 @@ app.post('/stravaWebhook', async (req, res) => {
             let heartrateValues = null;
             let values = [];
             if (streams.heartrate !== undefined) {
-                if (streams.heartrate.series_type === 'distance') {
+//                if (streams.heartrate.series_type === 'distance') {
                     for (let j = 0; j < streams.heartrate.data.length; j++) {
                         values.push({ x: streams.distance.data[j], y: streams.heartrate.data[j] });
                     }
@@ -914,6 +914,7 @@ app.post('/stravaWebhook', async (req, res) => {
                         data: values,
                         series_type: streams.heartrate.series_type
                     }    
+/*
                 } else if (streams.heartrate.series_type === 'time') {
                     for (let j = 0; j < streams.heartrate.data.length; j++) {
                         values.push({ x: streams.time.data[j], y: streams.heartrate.data[j] });
@@ -924,6 +925,7 @@ app.post('/stravaWebhook', async (req, res) => {
                     }    
                 }
             }
+*/
             let altitudeValues = null;
             values = [];
             if (streams.altitude !== undefined) {
