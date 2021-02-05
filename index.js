@@ -152,7 +152,8 @@ getStravaLaps = async (accessToken, activityId) => {
 getStravaStreams = async (accessToken, activityId) => {
     try {
         let response = await axios.get('https://www.strava.com/api/v3/activities/' + activityId + '/streams' +
-                                    '?keys=latlng,heartrate,altitude,velocity_smooth,cadence,watts,temp,distance,time&key_by_type=true', {
+                                    '?keys=latlng,heartrate,altitude,velocity_smooth,cadence,watts,distance,time&key_by_type=true', {
+//                                    '?keys=latlng,heartrate,altitude,velocity_smooth,cadence,watts,temp,distance,time&key_by_type=true', {
             headers: {
                 Authorization: 'Bearer ' + accessToken
             }
@@ -618,7 +619,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
             let heartrateValues = null;
             let values = [];
             if (streams.heartrate !== undefined) {
-                if (streams.heartrate.series_type === 'distance') {
+/*                if (streams.heartrate.series_type === 'distance') {
                     for (let j = 0; j < streams.heartrate.data.length; j++) {
                         values.push({ x: streams.distance.data[j], y: streams.heartrate.data[j] });
                     }
@@ -627,6 +628,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         series_type: streams.heartrate.series_type
                     }    
                 } else if (streams.heartrate.series_type === 'time') {
+*/
                     for (let j = 0; j < streams.heartrate.data.length; j++) {
                         values.push({ x: streams.time.data[j], y: streams.heartrate.data[j] });
                     }
@@ -634,12 +636,12 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         data: values,
                         series_type: streams.heartrate.series_type
                     }    
-                }
+//                }
             }
             let altitudeValues = null;
             values = [];
             if (streams.altitude !== undefined) {
-                if (streams.altitude.series_type === 'distance') {
+/*                if (streams.altitude.series_type === 'distance') {
                     for (let j = 0; j < streams.altitude.data.length; j++) {
                         values.push({ x: streams.distance.data[j], y: streams.altitude.data[j] });
                     }
@@ -648,6 +650,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         series_type: streams.altitude.series_type
                     }    
                 } else if (streams.altitude.series_type === 'time') {
+*/
                     for (let j = 0; j < streams.altitude.data.length; j++) {
                         values.push({ x: streams.time.data[j], y: streams.altitude.data[j] });
                     }
@@ -655,12 +658,12 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         data: values,
                         series_type: streams.altitude.series_type
                     }    
-                }
+//                }
             }
             let velocitySmoothValues = null;
             values = [];
             if (streams.velocity_smooth !== undefined) {
-                if (streams.velocity_smooth.series_type === 'distance') {
+/*                if (streams.velocity_smooth.series_type === 'distance') {
                     for (let j = 0; j < streams.velocity_smooth.data.length; j++) {
                     values.push({ x: streams.distance.data[j], y: streams.velocity_smooth.data[j] });
                     }
@@ -669,6 +672,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         series_type: streams.velocity_smooth.series_type
                     }    
                 } else if (streams.velocity_smooth.series_type === 'time') {
+*/
                     for (let j = 0; j < streams.velocity_smooth.data.length; j++) {
                         values.push({ x: streams.time.data[j], y: streams.velocity_smooth.data[j] });
                     }
@@ -676,12 +680,12 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         data: values,
                         series_type: streams.velocity_smooth.series_type
                     }
-                }
+//                }
             }
             let cadenceValues = null;
             values = [];
             if (streams.cadence !== undefined) {
-                if (streams.cadence.series_type === 'distance') {
+/*                if (streams.cadence.series_type === 'distance') {
                     for (let j = 0; j < streams.cadence.data.length; j++) {
                         values.push({ x: streams.distance.data[j], y: streams.cadence.data[j] });
                     }
@@ -690,6 +694,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         series_type: streams.cadence.series_type
                     }    
                 } else if (streams.cadence.series_type === 'time') {
+*/
                     for (let j = 0; j < streams.cadence.data.length; j++) {
                         values.push({ x: streams.time.data[j], y: streams.cadence.data[j] });
                     }
@@ -697,12 +702,12 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         data: values,
                         series_type: streams.cadence.series_type
                     }    
-                }
+//                }
             }
             let wattsValues = null;
             values = [];
             if (streams.watts !== undefined) {
-                if (streams.watts.series_type === 'distance') {
+/*                if (streams.watts.series_type === 'distance') {
                     for (let j = 0; j < streams.watts.data.length; j++) {
                         values.push({ x: streams.distance.data[j], y: streams.watts.data[j] });
                     }
@@ -711,6 +716,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         series_type: streams.watts.series_type
                     }    
                 } else if (streams.watts.series_type === 'time') {
+*/
                     for (let j = 0; j < streams.watts.data.length; j++) {
                         values.push({ x: streams.time.data[j], y: streams.watts.data[j] });
                     }
@@ -718,11 +724,11 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                         data: values,
                         series_type: streams.watts.series_type
                     }    
-                }
+//                }
             }
             let tempValues = null;
             values = [];
-            if (streams.temp !== undefined) {
+/*            if (streams.temp !== undefined) {
                 if (streams.temp.series_type === 'distance') {
                     for (let j = 0; j < streams.temp.data.length; j++) {
                         values.push({ x: streams.distance.data[j], y: streams.temp.data[j] });
@@ -741,6 +747,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     }    
                 }
             }
+*/
             let distanceValues = null;
             let timeValues = null;
 
@@ -906,7 +913,7 @@ app.post('/stravaWebhook', async (req, res) => {
             let heartrateValues = null;
             let values = [];
             if (streams.heartrate !== undefined) {
-//                if (streams.heartrate.series_type === 'distance') {
+/*                if (streams.heartrate.series_type === 'distance') {
                     for (let j = 0; j < streams.heartrate.data.length; j++) {
                         values.push({ x: streams.distance.data[j], y: streams.heartrate.data[j] });
                     }
@@ -914,8 +921,8 @@ app.post('/stravaWebhook', async (req, res) => {
                         data: values,
                         series_type: streams.heartrate.series_type
                     }    
-/*
                 } else if (streams.heartrate.series_type === 'time') {
+*/
                     for (let j = 0; j < streams.heartrate.data.length; j++) {
                         values.push({ x: streams.time.data[j], y: streams.heartrate.data[j] });
                     }
@@ -923,13 +930,12 @@ app.post('/stravaWebhook', async (req, res) => {
                         data: values,
                         series_type: streams.heartrate.series_type
                     }    
-                }
-*/
+//                }
             }
             let altitudeValues = null;
             values = [];
             if (streams.altitude !== undefined) {
-//                if (streams.altitude.series_type === 'distance') {
+/*                if (streams.altitude.series_type === 'distance') {
                     for (let j = 0; j < streams.altitude.data.length; j++) {
                         values.push({ x: streams.distance.data[j], y: streams.altitude.data[j] });
                     }
@@ -937,7 +943,8 @@ app.post('/stravaWebhook', async (req, res) => {
                         data: values,
                         series_type: streams.altitude.series_type
                     }    
-/*                } else if (streams.altitude.series_type === 'time') {
+                } else if (streams.altitude.series_type === 'time') {
+*/
                     for (let j = 0; j < streams.altitude.data.length; j++) {
                         values.push({ x: streams.time.data[j], y: streams.altitude.data[j] });
                     }
@@ -945,13 +952,12 @@ app.post('/stravaWebhook', async (req, res) => {
                         data: values,
                         series_type: streams.altitude.series_type
                     }    
-                }
-*/
+//                }
             }
             let velocitySmoothValues = null;
             values = [];
             if (streams.velocity_smooth !== undefined) {
-//                if (streams.velocity_smooth.series_type === 'distance') {
+/*                if (streams.velocity_smooth.series_type === 'distance') {
                     for (let j = 0; j < streams.velocity_smooth.data.length; j++) {
                     values.push({ x: streams.distance.data[j], y: streams.velocity_smooth.data[j] });
                     }
@@ -959,7 +965,8 @@ app.post('/stravaWebhook', async (req, res) => {
                         data: values,
                         series_type: streams.velocity_smooth.series_type
                     }    
-/*                } else if (streams.velocity_smooth.series_type === 'time') {
+                } else if (streams.velocity_smooth.series_type === 'time') {
+*/
                     for (let j = 0; j < streams.velocity_smooth.data.length; j++) {
                         values.push({ x: streams.time.data[j], y: streams.velocity_smooth.data[j] });
                     }
@@ -967,13 +974,12 @@ app.post('/stravaWebhook', async (req, res) => {
                         data: values,
                         series_type: streams.velocity_smooth.series_type
                     }
-                }
-*/
+//                }
             }
             let cadenceValues = null;
             values = [];
             if (streams.cadence !== undefined) {
-//                if (streams.cadence.series_type === 'distance') {
+/*                if (streams.cadence.series_type === 'distance') {
                     for (let j = 0; j < streams.cadence.data.length; j++) {
                         values.push({ x: streams.distance.data[j], y: streams.cadence.data[j] });
                     }
@@ -981,7 +987,8 @@ app.post('/stravaWebhook', async (req, res) => {
                         data: values,
                         series_type: streams.cadence.series_type
                     }    
-/*                } else if (streams.cadence.series_type === 'time') {
+                } else if (streams.cadence.series_type === 'time') {
+*/
                     for (let j = 0; j < streams.cadence.data.length; j++) {
                         values.push({ x: streams.time.data[j], y: streams.cadence.data[j] });
                     }
@@ -989,13 +996,12 @@ app.post('/stravaWebhook', async (req, res) => {
                         data: values,
                         series_type: streams.cadence.series_type
                     }    
-                }
-*/
+//                }
             }
             let wattsValues = null;
             values = [];
             if (streams.watts !== undefined) {
-//                if (streams.watts.series_type === 'distance') {
+/*                if (streams.watts.series_type === 'distance') {
                     for (let j = 0; j < streams.watts.data.length; j++) {
                         values.push({ x: streams.distance.data[j], y: streams.watts.data[j] });
                     }
@@ -1003,7 +1009,8 @@ app.post('/stravaWebhook', async (req, res) => {
                         data: values,
                         series_type: streams.watts.series_type
                     }    
-/*                } else if (streams.watts.series_type === 'time') {
+                } else if (streams.watts.series_type === 'time') {
+*/
                     for (let j = 0; j < streams.watts.data.length; j++) {
                         values.push({ x: streams.time.data[j], y: streams.watts.data[j] });
                     }
@@ -1011,13 +1018,13 @@ app.post('/stravaWebhook', async (req, res) => {
                         data: values,
                         series_type: streams.watts.series_type
                     }    
-                }
-*/
+//                }
             }
             let tempValues = null;
             values = [];
+/*
             if (streams.temp !== undefined) {
-//                if (streams.temp.series_type === 'distance') {
+                if (streams.temp.series_type === 'distance') {
                     for (let j = 0; j < streams.temp.data.length; j++) {
                         values.push({ x: streams.distance.data[j], y: streams.temp.data[j] });
                     }
@@ -1025,7 +1032,7 @@ app.post('/stravaWebhook', async (req, res) => {
                         data: values,
                         series_type: streams.temp.series_type
                     }    
-/*                } else if (streams.temp.series_type === 'time') {
+                } else if (streams.temp.series_type === 'time') {
                     for (let j = 0; j < streams.temp.data.length; j++) {
                         values.push({ x: streams.time.data[j], y: streams.temp.data[j] });
                     }
@@ -1034,9 +1041,8 @@ app.post('/stravaWebhook', async (req, res) => {
                         series_type: streams.temp.series_type
                     }    
                 }
-*/
             }
-
+*/
             let distanceValues = null;
             if (streams.distance !== undefined) {
                 distanceValues = {
