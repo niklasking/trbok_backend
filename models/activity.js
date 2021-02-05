@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
+/*
 const LapSchema = new Schema(    
     {
         id: Number,
@@ -21,6 +22,8 @@ const LapSchema = new Schema(
         total_elevation_gain: Number
     }
 );
+*/
+/*
 const LatLngSchema = new Schema(
     {
         data: [
@@ -29,49 +32,63 @@ const LatLngSchema = new Schema(
         series_type: String
     }
 );
+*/
+/*
 const HeartrateSchema = new Schema(
     {
         data: [{ x: Number, y: Number }],
         series_type: String
     }
 );
+*/
+/*
 const AltitudeSchema = new Schema(
     {
         data: [{ x: Number, y: Number }],
         series_type: String
     }
 );
+*/
+/*
 const VelocitySmoothSchema = new Schema(
     {
         data: [{ x: Number, y: Number }],
         series_type: String
     }
 );
+*/
+/*
 const CadenceSchema = new Schema(
     {
         data: [{ x: Number, y: Number }],
         series_type: String
     }
 );
+*/
+/*
 const WattsSchema = new Schema(
     {
         data: [{ x: Number, y: Number }],
         series_type: String
     }
 );
+*/
+/*
 const DistanceSchema = new Schema(
     {
         data: [Number],
         series_type: String
     }
 );
+*/
+/*
 const TimeSchema = new Schema(
     {
         data: [Number],
         series_type: String
     }
 );
-
+*/
 const ActivitySchema = new Schema(    
     {
         name: String,
@@ -112,15 +129,47 @@ const ActivitySchema = new Schema(
         movingTimePlanned: Number,
         distancePlanned: Number,
         namePlanned: String,
-        laps: [ LapSchema ],
-        latlngValues: [ LatLngSchema ],
-        heartrateValues: [ HeartrateSchema ],
-        altitudeValues: [ AltitudeSchema ],
-        velocitySmoothValues: [ VelocitySmoothSchema ],
-        cadenceValues: [ CadenceSchema ],
-        wattsValues: [ WattsSchema ],
-        distanceValues: [ DistanceSchema ],
-        timeValues: [ TimeSchema ],
+        laps: {
+            type: Schema.Types.ObjectId,
+            ref: 'Lap'
+        },
+        latlngValues: {
+            type: Schema.Types.ObjectId,
+            ref: 'LatLng'
+        },
+        heartrateValues: {
+            type: Schema.Types.ObjectId,
+            ref: 'Heartrate'
+        },
+        altitudeValues: {
+            type: Schema.Types.ObjectId,
+            ref: 'Altitude'
+        },
+        velocityValues: {
+            type: Schema.Types.ObjectId,
+            ref: 'Velocity'
+        },
+        cadenceValues: {
+            type: Schema.Types.ObjectId,
+            ref: 'Cadence'
+        },
+        wattsValues: {
+            type: Schema.Types.ObjectId,
+            ref: 'Watt'
+        },
+        timeValues: {
+            type: Schema.Types.ObjectId,
+            ref: 'Time'
+        },
+//        laps: [ LapSchema ],
+//        latlngValues: [ LatLngSchema ],
+//        heartrateValues: [ HeartrateSchema ],
+//        altitudeValues: [ AltitudeSchema ],
+//        velocitySmoothValues: [ VelocitySmoothSchema ],
+//        cadenceValues: [ CadenceSchema ],
+//        wattsValues: [ WattsSchema ],
+//        distanceValues: [ DistanceSchema ],
+//        timeValues: [ TimeSchema ],
         isStravaSynced: Boolean,
         hasStravaActivity: Boolean,
         isStravaStreamsSynced: Boolean
