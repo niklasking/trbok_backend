@@ -1036,7 +1036,7 @@ app.post('/stravaWebhook', async (req, res) => {
                 }
 */
             }
-/*
+
             let distanceValues = null;
             if (streams.distance !== undefined) {
                 distanceValues = {
@@ -1044,7 +1044,7 @@ app.post('/stravaWebhook', async (req, res) => {
                     series_type: streams.distance.series_type
                 }
             }
-*/
+
             let timeValues = null;
             if (streams.time !== undefined) {
                 timeValues = {
