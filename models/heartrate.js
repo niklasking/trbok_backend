@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const HeartrateSchema = new Schema(
     {
         data: [
-            [Number]
+            { x: Number, y: Number }
         ],
         series_type: String
     },
