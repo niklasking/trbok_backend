@@ -809,7 +809,7 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     isStravaStreamsSynced: true
             });
             const doc = await activity.save();
-            console.log(doc);
+//            console.log(doc);
         };
         res.status(200).send('Ok');
     }
