@@ -7,6 +7,7 @@ const VelocitySchema = new Schema(
             { x: Number, y: Number }
         ],
         series_type: String
-    }
+    },
+    { collection: 'velocity' }
 );
 module.exports = mongoose.model('Velocity', VelocitySchema );

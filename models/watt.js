@@ -7,6 +7,7 @@ const WattSchema = new Schema(
             { x: Number, y: Number }
         ],
         series_type: String
-    }
+    },
+    { collection: 'watt' }
 );
 module.exports = mongoose.model('Watt', WattSchema );

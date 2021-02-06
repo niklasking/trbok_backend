@@ -7,6 +7,7 @@ const CadenceSchema = new Schema(
             { x: Number, y: Number }
         ],
         series_type: String
-    }
+    },
+    { collection: 'cadence' }
 );
 module.exports = mongoose.model('Cadence', CadenceSchema );
