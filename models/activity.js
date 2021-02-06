@@ -129,6 +129,15 @@ const ActivitySchema = new Schema(
         movingTimePlanned: Number,
         distancePlanned: Number,
         namePlanned: String,
+        laps: String,
+        latlngValues: String,
+        heartrateValues: String,
+        altitudeValues: String,
+        velocityValues: String,
+        cadenceValues: String,
+        wattsValues: String,
+        timeValues: String,
+/*
         laps: {
             type: Schema.Types.ObjectId,
             ref: 'Lap'
@@ -161,6 +170,7 @@ const ActivitySchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'Time'
         },
+*/
 //        laps: [ LapSchema ],
 //        latlngValues: [ LatLngSchema ],
 //        heartrateValues: [ HeartrateSchema ],
