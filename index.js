@@ -724,32 +724,56 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
 
 
             // Save laps
-            // TBD
+            let savedLap = null;
+            if (laps !== null) {
+                const lap = new Lap(
+                    laps
+                );
+                savedLap = await lap.save();
+            }
             // Save streams
-            const latlng = new LatLng(
-                latlngValues
-            );
-            const savedLatLng = await latlng.save();
-            const heartrate = new Heartrate(
-                heartrateValues
-            );
-            const savedHeartrate = await heartrate.save();
-            const altitude = new Altitude(
-                altitudeValues
-            );
-            const savedAltitude = await altitude.save();
-            const velocity = new Velocity(
-                velocitySmoothValues
-            );
-            const savedVelocity = await velocity.save();
-            const cadence = new Cadence(
-                cadenceValues
-            );
-            const savedCadence = await cadence.save();
-            const watts = new Watt(
-                wattsValues
-            );
-            const savedWatts = await watts.save();
+            let savedLatLng = null;
+            if (latlngValues !== null) {
+                const latlng = new LatLng(
+                    latlngValues
+                );
+                savedLatLng = await latlng.save();
+            }
+            let savedHeartrate = null;
+            if (heartrateValues !== null) {
+                const heartrate = new Heartrate(
+                    heartrateValues
+                );
+                savedHeartrate = await heartrate.save();
+            }
+            let savedAltitude = null;
+            if (altitudeValues !== null) {
+                const altitude = new Altitude(
+                    altitudeValues
+                );
+                savedAltitude = await altitude.save();
+            }
+            let savedVelocity = null;
+            if (velocitySmoothValues !== null) {
+                const velocity = new Velocity(
+                    velocitySmoothValues
+                );
+                savedVelocity = await velocity.save();
+            }
+            let savedCadence = null;
+            if (cadenceValues !== null) {
+                const cadence = new Cadence(
+                    cadenceValues
+                );
+                savedCadence = await cadence.save();
+            }
+            let savedWatts = null;
+            if (wattsValues !== null) {
+                const watts = new Watt(
+                    wattsValues
+                );
+                savedWatts = await watts.save();
+            }
             // Save activity
             const startTime = moment(result[i].start_date).format('HH:mm');
             const lsd = result[i].moving_time > 5400 ? 1 : 0;
@@ -787,20 +811,20 @@ app.get('/api/v1/strava/activities/between', async (req, res) => {
                     alternative: alternative,
                     forest: 0,
                     path: 0,
-                    laps: null,
-//                    laps: laps,
+//                    laps: null,
+                    laps: savedLap !== null ? savedLap._id : null,
 //                    latlngValues: latlngValues,
-                    latlngValues: savedLatLng!== undefined ? savedLatLng._id : null,
+                    latlngValues: savedLatLng !== null ? savedLatLng._id : null,
 //                    heartrateValues: heartrateValues,
-                    heartrateValues: savedHeartrate !== undefined ? savedHeartrate._id : null,
+                    heartrateValues: savedHeartrate !== null ? savedHeartrate._id : null,
 //                    altitudeValues: altitudeValues,
-                    altitudeValues: savedAltitude !== undefined ? savedAltitude._id : null,
+                    altitudeValues: savedAltitude !== null ? savedAltitude._id : null,
 //                    velocitySmoothValues: velocitySmoothValues,
-                    velocityValues: savedVelocity !== undefined ? savedVelocity._id : null,
+                    velocityValues: savedVelocity !== null ? savedVelocity._id : null,
 //                    cadenceValues: cadenceValues,
-                    cadenceValues: savedCadence !== undefined ? savedCadence._id : null,
+                    cadenceValues: savedCadence !== null ? savedCadence._id : null,
 //                    wattsValues: wattsValues,
-                    wattsValues: savedWatts !== undefined ? savedWatts._id : null,
+                    wattsValues: savedWatts !== null ? savedWatts._id : null,
 //                    tempValues: tempValues,
 //                    distanceValues: distanceValues,
 //                    timeValues: timeValues,
