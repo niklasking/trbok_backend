@@ -925,6 +925,193 @@ app.post('/stravaWebhook', async (req, res) => {
                     await Activity.findByIdAndRemove(dayActivities[0]._id);
                 }
             }
+            // Spara den nya aktiviteten
+            // Get laps
+            let laps = await getStravaLaps(accessToken, activityId);
+            if (laps === undefined) {
+                laps = null;
+            }
+            // Get streams
+            const streams = await getStravaStreams(accessToken, activityId);
+            let latlngValues = null;
+            if (streams.latlng !== undefined) {
+                latlngValues = {
+                    data: streams.latlng.data,
+                    series_type: streams.latlng.series_type
+                }
+            }
+            let heartrateValues = null;
+            let values = [];
+            if (streams.heartrate !== undefined) {
+                for (let j = 0; j < streams.heartrate.data.length; j++) {
+                    values.push({ x: streams.time.data[j], y: streams.heartrate.data[j] });
+                }
+                heartrateValues = {
+                    data: values,
+                    series_type: streams.heartrate.series_type
+                }    
+            }
+            let altitudeValues = null;
+            values = [];
+            if (streams.altitude !== undefined) {
+                for (let j = 0; j < streams.altitude.data.length; j++) {
+                    values.push({ x: streams.time.data[j], y: streams.altitude.data[j] });
+                }
+                altitudeValues = {
+                    data: values,
+                    series_type: streams.altitude.series_type
+                }    
+            }
+            let velocitySmoothValues = null;
+            values = [];
+            if (streams.velocity_smooth !== undefined) {
+                for (let j = 0; j < streams.velocity_smooth.data.length; j++) {
+                    values.push({ x: streams.time.data[j], y: streams.velocity_smooth.data[j] });
+                }
+                velocitySmoothValues = {
+                    data: values,
+                    series_type: streams.velocity_smooth.series_type
+                }
+            }
+            let cadenceValues = null;
+            values = [];
+            if (streams.cadence !== undefined) {
+                for (let j = 0; j < streams.cadence.data.length; j++) {
+                    values.push({ x: streams.time.data[j], y: streams.cadence.data[j] });
+                }
+                cadenceValues = {
+                    data: values,
+                    series_type: streams.cadence.series_type
+                }    
+            }
+            let wattsValues = null;
+            values = [];
+            if (streams.watts !== undefined) {
+                for (let j = 0; j < streams.watts.data.length; j++) {
+                    values.push({ x: streams.time.data[j], y: streams.watts.data[j] });
+                }
+                wattsValues = {
+                    data: values,
+                    series_type: streams.watts.series_type
+                }    
+            }
+            let tempValues = null;
+            values = [];
+//            let distanceValues = null;
+//            let timeValues = null;
+
+
+            // Save laps
+            let savedLap = null;
+            if (laps !== null) {
+                const lap = new Lap(
+                    laps
+                );
+                savedLap = await lap.save();
+            }
+            // Save streams
+            let savedLatLng = null;
+            if (latlngValues !== null) {
+                const latlng = new LatLng(
+                    latlngValues
+                );
+                savedLatLng = await latlng.save();
+            }
+            let savedHeartrate = null;
+            if (heartrateValues !== null) {
+                const heartrate = new Heartrate(
+                    heartrateValues
+                );
+                savedHeartrate = await heartrate.save();
+            }
+            let savedAltitude = null;
+            if (altitudeValues !== null) {
+                const altitude = new Altitude(
+                    altitudeValues
+                );
+                savedAltitude = await altitude.save();
+            }
+            let savedVelocity = null;
+            if (velocitySmoothValues !== null) {
+                const velocity = new Velocity(
+                    velocitySmoothValues
+                );
+                savedVelocity = await velocity.save();
+            }
+            let savedCadence = null;
+            if (cadenceValues !== null) {
+                const cadence = new Cadence(
+                    cadenceValues
+                );
+                savedCadence = await cadence.save();
+            }
+            let savedWatts = null;
+            if (wattsValues !== null) {
+                const watts = new Watt(
+                    wattsValues
+                );
+                savedWatts = await watts.save();
+            }
+            // Save activity
+            const lsd = item.moving_time > 5400 ? 1 : 0;
+            const strength = item.type === 'WeightTraining' ? 1 : 0;
+            const alternative = item.type === 'Swim' || item.type === 'Ride' || item.type === 'VirtualRide' || item.type === 'Walk' || item.type === 'Workout' ? 1 : 0;
+            const activity = new Activity(
+                {
+                    name: startTime + ' ' + item.name,
+                    distance: item.distance,
+                    movingTime: item.moving_time,
+                    totalElevationGain: item.total_elevation_gain,
+                    type: item.type,
+                    stravaId: item.id,
+                    startDate: new Date(item.start_date),
+                    startDateLocal: new Date(item.start_date_local),
+                    startLat: item.start_latitude,
+                    startLong: item.start_longitude,
+                    mapPolyline: item.map.summary_polyline,
+                    averageSpeed: item.average_speed,
+                    maxSpeed: item.max_speed,
+                    averageCadence: item.average_cadence,
+                    maxCadence: item.max_cadense,
+                    averageHeartrate: item.average_heartrate,
+                    maxHeartRate: item.max_heartrate,
+                    elevationHighest: item.elev_high,
+                    elevationLowest: item.elev_low,
+                    user: userData._id,
+                    title: startTime,
+                    ol: 0,
+                    night: 0, // Natt-OL
+                    quality: 0,
+                    lsd: lsd, // Långpass,
+                    strength: strength,
+                    alternative: alternative,
+                    forest: 0,
+                    path: 0,
+                    userStravaId: userStravaId,
+                    namePlanned: namePlanned,
+                    typePlanned: typePlanned,
+                    movingTimePlanned: movingTimePlanned,
+                    distancePlanned: distancePlanned,
+                    laps: savedLap !== null ? savedLap._id : null,
+                    latlngValues: savedLatLng !== null ? savedLatLng._id : null,
+                    heartrateValues: savedHeartrate !== null ? savedHeartrate._id : null,
+                    altitudeValues: savedAltitude !== null ? savedAltitude._id : null,
+                    velocityValues: savedVelocity !== null ? savedVelocity._id : null,
+                    cadenceValues: savedCadence !== null ? savedCadence._id : null,
+                    wattsValues: savedWatts !== null ? savedWatts._id : null,
+//                    tempValues: tempValues,
+//                    distanceValues: distanceValues,
+//                    timeValues: timeValues,
+                    isStravaSynced: true,
+                    hasStravaActivity: true,
+                    isStravaStreamsSynced: true
+                 }
+            );
+            await activity.save();
+            
+
+
+/*
             // Get laps
             let laps = await getStravaLaps(accessToken, activityId);
             if (laps === undefined) {
@@ -1070,6 +1257,7 @@ app.post('/stravaWebhook', async (req, res) => {
 //                console.log('Denna ska sparas: ' + activityId); 
             await activity.save();
             console.log(activity);
+*/
             res.status(200).send('EVENT_RECEIVED');
         } catch(err) {
             console.log("Det gick inte att skapa en aktivitet: " + err);
