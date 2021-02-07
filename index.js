@@ -400,7 +400,10 @@ app.get('/api/v1/activities', async (req, res) => {
 app.get('/api/v1/activities/:id/details', async (req, res) => {
     try {
         const activity = await Activity.findById(req.params.id);
-        // ADD LATLNG
+        let latlngValues = null;
+        if (activity.latlngValues !== null) {
+            latlngValues = await LatLng.findById(activity.latlngValues);
+        }
         let heartrateValues = null;
         if (activity.heartrateValues !== null) {
             heartrateValues = await Heartrate.findById(activity.heartrateValues);
@@ -426,7 +429,8 @@ app.get('/api/v1/activities/:id/details', async (req, res) => {
             altitudeValues: altitudeValues,
             velocityValues: velocityValues,
             cadenceValues: cadenceValues,
-            wattsValues: wattsValues
+            wattsValues: wattsValues,
+            latlngValues: latlngValues
         }
         res.status(200).send(result);
     } catch(err) {
