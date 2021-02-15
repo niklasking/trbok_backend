@@ -74,12 +74,21 @@ passport.use(new LocalStrategy(User.authenticate()));
 // SETUP POLL SCHEDULES FOR STRAVA
 const CronJob = require('cron').CronJob;
 const job = new CronJob('0 */10 * * * *', function() {
-    print10Minutes();
+    updateStravaStreams();
 });
 job.start();  
     
-print10Minutes = () => {
-    console.log("Dax att synka med Strava");
+updateStravaStreams = () => {
+    try {
+        const result = await Activity.find(
+            { hasStravaActivity: true, isStravaStreamsSyncedstartDate: false, }).sort({startDate: -1});
+
+        if (result.length > 0) {
+            console.log(result)
+        }
+        res.status(200).send(result[0]);
+    } catch(err) {
+    }        
 }
 
 authorize = async (stravaUserId) => {
