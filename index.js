@@ -83,7 +83,7 @@ updateStravaStreams = async () => {
         const activities = await Activity.find(
             { hasStravaActivity: true, isStravaStreamsSynced: false, }).sort({startDate: -1});
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 2; i++) {
             if (activities.length > i) {
                 let dbId = activities[i]._id;
                 let activityId = activities[i].stravaId;
