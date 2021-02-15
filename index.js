@@ -80,13 +80,156 @@ job.start();
     
 updateStravaStreams = async () => {
     try {
-        const result = await Activity.find(
+        const userStravaId = secret.clientID;
+        const accessToken = await authorize(userStravaId);
+        const activities = await Activity.find(
             { hasStravaActivity: true, isStravaStreamsSynced: false, }).sort({startDate: -1});
 
-        if (result.length > 0) {
-            console.log(result[0]);
-        } else {
-            console.log("No more activites to update");
+        for (let i = 0; i < 10; i++) {
+            if (activities.length > i) {
+                let activityId = activities.stravaId;
+
+                // Get laps
+                let laps = await getStravaLaps(accessToken, activityId);
+                if (laps === undefined) {
+                    laps = null;
+                }
+                // Get streams
+                const streams = await getStravaStreams(accessToken, activityId);
+                let latlngValues = null;
+                if (streams.latlng !== undefined) {
+                    latlngValues = {
+                        data: streams.latlng.data,
+                        series_type: streams.latlng.series_type
+                    }
+                }
+                let heartrateValues = null;
+                let values = [];
+                if (streams.heartrate !== undefined) {
+                    for (let j = 0; j < streams.heartrate.data.length; j++) {
+                        values.push({ x: streams.time.data[j], y: streams.heartrate.data[j] });
+                    }
+                    heartrateValues = {
+                        data: values,
+                        series_type: streams.heartrate.series_type
+                    }    
+                }
+                let altitudeValues = null;
+                values = [];
+                if (streams.altitude !== undefined) {
+                    for (let j = 0; j < streams.altitude.data.length; j++) {
+                        values.push({ x: streams.time.data[j], y: streams.altitude.data[j] });
+                    }
+                    altitudeValues = {
+                        data: values,
+                        series_type: streams.altitude.series_type
+                    }    
+                }
+                let velocitySmoothValues = null;
+                values = [];
+                if (streams.velocity_smooth !== undefined) {
+                    for (let j = 0; j < streams.velocity_smooth.data.length; j++) {
+                        values.push({ x: streams.time.data[j], y: streams.velocity_smooth.data[j] });
+                    }
+                    velocitySmoothValues = {
+                        data: values,
+                        series_type: streams.velocity_smooth.series_type
+                    }
+                }
+                let cadenceValues = null;
+                values = [];
+                if (streams.cadence !== undefined) {
+                    for (let j = 0; j < streams.cadence.data.length; j++) {
+                        values.push({ x: streams.time.data[j], y: streams.cadence.data[j] });
+                    }
+                    cadenceValues = {
+                        data: values,
+                        series_type: streams.cadence.series_type
+                    }    
+                }
+                let wattsValues = null;
+                values = [];
+                if (streams.watts !== undefined) {
+                    for (let j = 0; j < streams.watts.data.length; j++) {
+                        values.push({ x: streams.time.data[j], y: streams.watts.data[j] });
+                    }
+                    wattsValues = {
+                        data: values,
+                        series_type: streams.watts.series_type
+                    }    
+                }
+                let tempValues = null;
+                values = [];
+    //            let distanceValues = null;
+    //            let timeValues = null;
+
+
+                // Save laps
+                let savedLap = null;
+                if (laps !== null) {
+                    const lap = new Lap(
+                        laps
+                    );
+                    savedLap = await lap.save();
+                }
+                // Save streams
+                let savedLatLng = null;
+                if (latlngValues !== null) {
+                    const latlng = new LatLng(
+                        latlngValues
+                    );
+                    savedLatLng = await latlng.save();
+                }
+                let savedHeartrate = null;
+                if (heartrateValues !== null) {
+                    const heartrate = new Heartrate(
+                        heartrateValues
+                    );
+                    savedHeartrate = await heartrate.save();
+                }
+                let savedAltitude = null;
+                if (altitudeValues !== null) {
+                    const altitude = new Altitude(
+                        altitudeValues
+                    );
+                    savedAltitude = await altitude.save();
+                }
+                let savedVelocity = null;
+                if (velocitySmoothValues !== null) {
+                    const velocity = new Velocity(
+                        velocitySmoothValues
+                    );
+                    savedVelocity = await velocity.save();
+                }
+                let savedCadence = null;
+                if (cadenceValues !== null) {
+                    const cadence = new Cadence(
+                        cadenceValues
+                    );
+                    savedCadence = await cadence.save();
+                }
+                let savedWatts = null;
+                if (wattsValues !== null) {
+                    const watts = new Watt(
+                        wattsValues
+                    );
+                    savedWatts = await watts.save();
+                }
+                // Update activity
+                const activity = {
+                    laps: savedLap !== null ? savedLap._id : null,
+                    latlngValues: savedLatLng !== null ? savedLatLng._id : null,
+                    heartrateValues: savedHeartrate !== null ? savedHeartrate._id : null,
+                    altitudeValues: savedAltitude !== null ? savedAltitude._id : null,
+                    velocityValues: savedVelocity !== null ? savedVelocity._id : null,
+                    cadenceValues: savedCadence !== null ? savedCadence._id : null,
+                    wattsValues: savedWatts !== null ? savedWatts._id : null,
+                    isStravaSynced: true,
+                    hasStravaActivity: true,
+                    isStravaStreamsSynced: true
+                };
+                await Activity.findByIdAndUpdate(activityId, activity, { upsert: true });    
+            }
         }
     } catch(err) {
         console.log(err);
