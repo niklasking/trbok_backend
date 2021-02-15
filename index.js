@@ -78,7 +78,7 @@ const job = new CronJob('0 */10 * * * *', function() {
 });
 job.start();  
     
-updateStravaStreams = () => {
+updateStravaStreams = async () => {
     try {
         const result = await Activity.find(
             { hasStravaActivity: true, isStravaStreamsSyncedstartDate: false, }).sort({startDate: -1});
