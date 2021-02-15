@@ -81,13 +81,15 @@ job.start();
 updateStravaStreams = async () => {
     try {
         const result = await Activity.find(
-            { hasStravaActivity: true, isStravaStreamsSyncedstartDate: false, }).sort({startDate: -1});
+            { hasStravaActivity: true, isStravaStreamsSynced: false, }).sort({startDate: -1});
 
         if (result.length > 0) {
             console.log(result)
+        } else {
+            console.log("No more activites to update");
         }
-        res.status(200).send(result[0]);
     } catch(err) {
+        console.log(err);
     }        
 }
 
