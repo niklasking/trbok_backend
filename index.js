@@ -71,8 +71,16 @@ passport.deserializeUser(User.deserializeUser());
 const LocalStrategy = require('passport-local').Strategy; 
 passport.use(new LocalStrategy(User.authenticate()));
 
+// SETUP POLL SCHEDULES FOR STRAVA
+const CronJob = require('cron').CronJob;
+const job = new CronJob('0 */10 * * * *', function() {
+    print10Minutes();
+});
+job.start();  
     
-    
+print10Minutes = () => {
+    console.log("Dax att synka med Strava");
+}
 
 authorize = async (stravaUserId) => {
     try {
