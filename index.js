@@ -230,7 +230,6 @@ updateStravaStreams = async () => {
                     isStravaStreamsSynced: true
                 };
                 await Activity.findByIdAndUpdate(dbId, activity, { upsert: true });   
-                console.log("Updated: " + dbId + " (" + activityId + ")"); 
             }
         }
     } catch(err) {
