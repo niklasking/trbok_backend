@@ -80,14 +80,14 @@ job.start();
     
 updateStravaStreams = async () => {
     try {
-        const userStravaId = secret.clientID;
-        const accessToken = await authorize(userStravaId);
         const activities = await Activity.find(
             { hasStravaActivity: true, isStravaStreamsSynced: false, }).sort({startDate: -1});
 
         for (let i = 0; i < 10; i++) {
             if (activities.length > i) {
                 let activityId = activities.stravaId;
+                let userStravaId = activities.userStravaId;
+                const accessToken = await authorize(userStravaId);
 
                 // Get laps
                 let laps = await getStravaLaps(accessToken, activityId);
