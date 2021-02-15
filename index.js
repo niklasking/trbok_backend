@@ -84,7 +84,7 @@ updateStravaStreams = async () => {
             { hasStravaActivity: true, isStravaStreamsSynced: false, }).sort({startDate: -1});
 
         if (result.length > 0) {
-            console.log(result)
+            console.log(result[0]);
         } else {
             console.log("No more activites to update");
         }
