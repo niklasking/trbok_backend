@@ -85,8 +85,9 @@ updateStravaStreams = async () => {
 
         for (let i = 0; i < 10; i++) {
             if (activities.length > i) {
-                let activityId = activities.stravaId;
-                let userStravaId = activities.userStravaId;
+                let dbId = activities[i]._id;
+                let activityId = activities[i].stravaId;
+                let userStravaId = activities[i].userStravaId;
                 const accessToken = await authorize(userStravaId);
 
                 // Get laps
@@ -228,7 +229,8 @@ updateStravaStreams = async () => {
                     hasStravaActivity: true,
                     isStravaStreamsSynced: true
                 };
-                await Activity.findByIdAndUpdate(activityId, activity, { upsert: true });    
+                await Activity.findByIdAndUpdate(dbId, activity, { upsert: true });   
+                console.log("Updated: " + dbId + " (" + activityId + ")"); 
             }
         }
     } catch(err) {
