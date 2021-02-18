@@ -560,6 +560,55 @@ app.get('/api/v1/activities', async (req, res) => {
         res.status(400).send("Hittade inga aktiviteter");
     }
 });
+app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
+    let result = null;
+    try {
+        const activity = await Activity.findById(req.params.id);
+        switch (req.params.type) {
+            case 'latlng':            
+                let latlngValues = null;
+                if (activity.latlngValues !== null) {
+                    latlngValues = await LatLng.findById(activity.latlngValues);
+                }
+                result = latlngValues;
+            case 'heartrate':            
+                let heartrateValues = null;
+                if (activity.heartrateValues !== null) {
+                    heartrateValues = await LatLng.findById(activity.heartrateValues);
+                }
+                result = heartrateValues;
+            case 'altitude':            
+                let altitudeValues = null;
+                if (activity.altitudeValues !== null) {
+                    altitudeValues = await LatLng.findById(activity.altitudeValues);
+                }
+                result = altitudeValues;
+            case 'velocity':            
+                let velocityValues = null;
+                if (activity.velocityValues !== null) {
+                    velocityValues = await LatLng.findById(activity.velocityValues);
+                }
+                result = velocityValues;
+            case 'cadence':            
+                let cadenceValues = null;
+                if (activity.cadenceValues !== null) {
+                    cadenceValues = await LatLng.findById(activity.cadenceValues);
+                }
+                result = cadenceValues;
+            case 'watt':            
+                let wattsValues = null;
+                if (activity.wattsValues !== null) {
+                    wattsValues = await LatLng.findById(activity.wattsValues);
+                }
+                result = wattsValues;
+            default:
+                result = null;
+        } 
+        res.status(200).send(result);
+    } catch(err) {
+        res.status(400).send(err);
+    }
+});
 app.get('/api/v1/activities/:id/details', async (req, res) => {
     try {
         const activity = await Activity.findById(req.params.id);
