@@ -564,6 +564,7 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
     let result = null;
     try {
         const activity = await Activity.findById(req.params.id);
+        console.log(req.params.type);
         switch (req.params.type) {
             case 'latlng':            
                 let latlngValues = null;
