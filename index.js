@@ -575,6 +575,7 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
                     latlngValues = await LatLng.findById(activity.latlngValues);
                 }
                 result = latlngValues;
+                break;
             case 'heartrate':            
             console.log(activity.heartrateValues);
             let heartrateValues = null;
@@ -582,6 +583,7 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
                     heartrateValues = await Heartrate.findById(activity.heartrateValues);
                 }
                 result = heartrateValues;
+                break;
             case 'altitude':            
             console.log(req.params.type);
             let altitudeValues = null;
@@ -589,6 +591,7 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
                     altitudeValues = await Altitude.findById(activity.altitudeValues);
                 }
                 result = altitudeValues;
+                break;
             case 'velocity':            
             console.log(req.params.type);
             let velocityValues = null;
@@ -596,6 +599,7 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
                     velocityValues = await Velocity.findById(activity.velocityValues);
                 }
                 result = velocityValues;
+                break;
             case 'cadence':            
             console.log(req.params.type);
             let cadenceValues = null;
@@ -603,6 +607,7 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
                     cadenceValues = await Cadence.findById(activity.cadenceValues);
                 }
                 result = cadenceValues;
+                break;
             case 'watt':            
             console.log(req.params.type);
             let wattsValues = null;
@@ -610,6 +615,7 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
                     wattsValues = await Watt.findById(activity.wattsValues);
                 }
                 result = wattsValues;
+                break;
             default:
                 result = null;
         } 
