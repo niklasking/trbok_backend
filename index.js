@@ -610,6 +610,9 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
             default:
                 result = null;
         } 
+        console.log("************RESULT**********");
+        console.log(result);
+        console.log("************END RESULT**********");
         res.status(200).send(result);
     } catch(err) {
         res.status(400).send(err);
