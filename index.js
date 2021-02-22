@@ -564,12 +564,8 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
     let result = null;
     try {
         const activity = await Activity.findById(req.params.id);
-        console.log('************ACTIVITY***********');
-        console.log(activity);
-        console.log('**************');
         switch (req.params.type) {
             case 'latlng':            
-            console.log(activity.latlngValues);
             let latlngValues = null;
                 if (activity.latlngValues !== null) {
                     latlngValues = await LatLng.findById(activity.latlngValues);
@@ -577,7 +573,6 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
                 result = latlngValues;
                 break;
             case 'heartrate':            
-            console.log(activity.heartrateValues);
             let heartrateValues = null;
                 if (activity.heartrateValues !== null) {
                     heartrateValues = await Heartrate.findById(activity.heartrateValues);
@@ -585,7 +580,6 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
                 result = heartrateValues;
                 break;
             case 'altitude':            
-            console.log(req.params.type);
             let altitudeValues = null;
                 if (activity.altitudeValues !== null) {
                     altitudeValues = await Altitude.findById(activity.altitudeValues);
@@ -593,7 +587,6 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
                 result = altitudeValues;
                 break;
             case 'velocity':            
-            console.log(req.params.type);
             let velocityValues = null;
                 if (activity.velocityValues !== null) {
                     velocityValues = await Velocity.findById(activity.velocityValues);
@@ -601,7 +594,6 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
                 result = velocityValues;
                 break;
             case 'cadence':            
-            console.log(req.params.type);
             let cadenceValues = null;
                 if (activity.cadenceValues !== null) {
                     cadenceValues = await Cadence.findById(activity.cadenceValues);
@@ -609,7 +601,6 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
                 result = cadenceValues;
                 break;
             case 'watt':            
-            console.log(req.params.type);
             let wattsValues = null;
                 if (activity.wattsValues !== null) {
                     wattsValues = await Watt.findById(activity.wattsValues);
@@ -619,9 +610,6 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
             default:
                 result = null;
         } 
-        console.log("************RESULT**********");
-        console.log(result);
-        console.log("************END RESULT**********");
         res.status(200).send(result);
     } catch(err) {
         res.status(400).send(err);
