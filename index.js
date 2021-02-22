@@ -569,14 +569,14 @@ app.get('/api/v1/activities/:id/details/:type', async (req, res) => {
         console.log('**************');
         switch (req.params.type) {
             case 'latlng':            
-            console.log(req.params.type);
+            console.log(activity.latlngValues);
             let latlngValues = null;
                 if (activity.latlngValues !== null) {
                     latlngValues = await LatLng.findById(activity.latlngValues);
                 }
                 result = latlngValues;
             case 'heartrate':            
-            console.log(req.params.type);
+            console.log(activity.heartrateValues);
             let heartrateValues = null;
                 if (activity.heartrateValues !== null) {
                     heartrateValues = await Heartrate.findById(activity.heartrateValues);
