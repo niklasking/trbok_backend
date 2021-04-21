@@ -56,14 +56,15 @@ app.use(function (req, res, next) {
     next();
 });
 */
-//app.use(cors());
-
+app.use(cors());
+app.options('*', cors());
+/*
 const corsOptions = {
 //    origin: 'https://trbok.niklasking.com',
     origin: 'http://localhost:3000',
     optionSuccessStatus: 200
 }
-
+*/
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(expressSession);
@@ -528,8 +529,8 @@ app.post('/api/v1/login',  function(req, res) {
         } 
     } 
 });
-//app.post('/api/v1/register', function(req, res) {
-app.post('/api/v1/register', cors(corsOptions), function(req, res) {
+app.post('/api/v1/register', function(req, res) {
+//app.post('/api/v1/register', cors(corsOptions), function(req, res) {
     Users=new User({
         email: req.body.email, 
         username : req.body.username,
