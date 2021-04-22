@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors');
+//const cors = require('cors');
 const mongoose = require('mongoose');
 const moment = require('moment');
 const axios = require('axios');
@@ -59,6 +59,7 @@ app.use(function (req, res, next) {
 //app.use(cors());
 //app.options('*', cors());
 
+/*
 var whitelist = ['http://localhost:3000', 'http://trbok.niklasking.com', 'https://trbok.niklasking.com']; //white list consumers
 var corsOptions = {
   origin: function (origin, callback) {
@@ -74,7 +75,7 @@ var corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'device-remember-token', 'Access-Control-Allow-Origin', 'Origin', 'Accept']
 };
 app.use(cors(corsOptions)); //adding cors middleware to the express with above configurations
-
+*/
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
