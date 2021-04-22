@@ -56,8 +56,8 @@ app.use(function (req, res, next) {
     next();
 });
 */
-app.use(cors());
-app.options('*', cors());
+//app.use(cors());
+//app.options('*', cors());
 
 const corsOptions = {
     origin: 'https://trbok.niklasking.com',
