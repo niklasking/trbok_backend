@@ -59,7 +59,7 @@ app.use(function (req, res, next) {
 //app.use(cors());
 //app.options('*', cors());
 
-var whitelist = ['http://localhost:5000', 'http://trbok.niklasking.com', 'https://trbok.niklasking.com']; //white list consumers
+var whitelist = ['http://localhost:3000', 'http://trbok.niklasking.com', 'https://trbok.niklasking.com']; //white list consumers
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
