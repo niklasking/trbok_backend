@@ -59,11 +59,22 @@ app.use(function (req, res, next) {
 //app.use(cors());
 //app.options('*', cors());
 
-const corsOptions = {
-    origin: 'https://trbok.niklasking.com',
-//    origin: 'http://localhost:3000',
-    optionSuccessStatus: 200
-}
+var whitelist = ['http://localhost:5000', 'http://trbok.niklasking.com', 'https://trbok.niklasking.com']; //white list consumers
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
+  methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  credentials: true, //Credentials are cookies, authorization headers or TLS client certificates.
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'device-remember-token', 'Access-Control-Allow-Origin', 'Origin', 'Accept']
+};
+app.use(cors(corsOptions)); //adding cors middleware to the express with above configurations
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -529,8 +540,8 @@ app.post('/api/v1/login',  function(req, res) {
         } 
     } 
 });
-//app.post('/api/v1/register', function(req, res) {
-app.post('/api/v1/register', cors(corsOptions), function(req, res) {
+app.post('/api/v1/register', function(req, res) {
+//app.post('/api/v1/register', cors(corsOptions), function(req, res) {
     Users=new User({
         email: req.body.email, 
         username : req.body.username,
